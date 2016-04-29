@@ -1,11 +1,6 @@
 // Anleitung um mit Github lokal zu arbeiten
 // JEDES mal machen BEVOR man änderungen macht, da es andernfalls Konflikte/ Komplikationen gibt 
 
-
-
-
-
-
 1. git shell öffnen
 2. Neuen Ordner erstellen mit mkdir <Verzeichnisname>
 3. cd <Verzeichnisname>
@@ -18,13 +13,14 @@
 10. git merge upstream 			
 
 // Jetzt hat man die aktuellste Version von Timon
-// 
+
 11. git checkout master
-//hiermit "updatet" man sein eigentliches lokales Verzeichnis auf das temp verzeichnis in dem sich die aktuelle Version
+//hiermit "updatet" man sein eigentliches lokales Verzeichnis auf das temp verzeichnis in dem sich die aktuelle Version befindet
 12. git push//Die eignene Version auf github.com auf Timons Version in github.com synchronisieren
 //ab hier kann man damit arbeiten
 
 ...
+
 //wenn man arbeitet mindestens einmal committen spätestens wenn man fertig ist
 13. git push // auf das eigene github.com repository hochladen
 
