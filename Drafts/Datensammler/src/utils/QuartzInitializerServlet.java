@@ -1,4 +1,6 @@
 
+package utils;
+
 import java.io.IOException;
 import javax.naming.NamingException;
 import javax.servlet.ServletConfig;
@@ -10,24 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 
+
 public class QuartzInitializerServlet extends HttpServlet {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private boolean performShutdown = true;
 
     private Scheduler scheduler = null;
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Interface.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+    // Interface
 
     public void init(ServletConfig cfg) throws javax.servlet.ServletException {
         
