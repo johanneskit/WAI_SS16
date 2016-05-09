@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 
+org.quartz.properties
 
 public class QuartzInitializerServlet extends HttpServlet {
 
@@ -29,7 +30,7 @@ public class QuartzInitializerServlet extends HttpServlet {
 
         StdSchedulerFactory factory;
         try {
-            if (JNDIFactory.getInstance().getEnvironmentAsBoolean("wai_hilf").booleanValue() == true)
+            if (JNDIFactory.getInstance().getEnvironmentAsBoolean("db").booleanValue() == true)
             {
 
 	            String configFile = JNDIFactory.getInstance().getEnvironmentAsString("projectPath")
