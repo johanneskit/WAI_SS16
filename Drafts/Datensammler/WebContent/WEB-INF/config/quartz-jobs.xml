@@ -3,16 +3,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.quartz-scheduler.org/xml/JobSchedulingData http://www.quartz-scheduler.org/xml/job_scheduling_data_1_8.xsd"
     version="1.8">
-    
-    <!-- cron expressions:
-		1. Seconds
-		2. Minutes
-		3. Hours
-		4. Day-of-Month
-		5. Month
-		6. Day-of-Week
-		7. Year (optional field)
-	-->
    
     <pre-processing-commands>
         <delete-jobs-in-group>*</delete-jobs-in-group>  <!-- clear all jobs in scheduler -->
@@ -37,7 +27,7 @@
                 <name>Trigger1</name>
                 <job-name>Job1</job-name>
                 <repeat-count>-1</repeat-count>
-                <repeat-interval>1000</repeat-interval>
+                 <repeat-interval>300000</repeat-interval> <!-- 5 mins -->
             </simple>
         </trigger>
 

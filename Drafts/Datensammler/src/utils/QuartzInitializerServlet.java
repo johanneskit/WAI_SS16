@@ -9,8 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 
 public class QuartzInitializerServlet extends HttpServlet {
 
@@ -18,81 +19,70 @@ public class QuartzInitializerServlet extends HttpServlet {
 
 	private boolean performShutdown = true;
 
-    private Scheduler scheduler = null;
+	private Scheduler scheduler = null;
 
-    // Interface
+	// Interface
 
-    public void init(ServletConfig cfg) throws javax.servlet.ServletException {
-        
-        super.init(cfg);
+	public void init(ServletConfig cfg) throws javax.servlet.ServletException {
 
-        StdSchedulerFactory factory;
-        try {
-            if (JNDIFactory.getInstance().getEnvironmentAsBoolean("db").booleanValue() == true)
-            {
+		super.init(cfg);
 
-	            String configFile = JNDIFactory.getInstance().getEnvironmentAsString("projectPath")
-	    						  + JNDIFactory.getInstance().getEnvironmentAsString("configPath")
-	    						  + "/quartz.properties";
-	            
-	            // get Properties
-                factory = new StdSchedulerFactory(configFile);
-	
-	            // Always want to get the scheduler, even if it isn't starting,
-	            // to make sure it is both initialized and registered.
-	            scheduler = factory.getScheduler();
-	
-	            // Should the Scheduler being started now or later
-	            String startOnLoad = cfg.getInitParameter("start-scheduler-on-load");
-	            /*
-	             * If the "start-scheduler-on-load" init-parameter is not
-	             * specified, the scheduler will be started. This is to maintain
-	             * backwards compatability.
-	             */
-	            if (startOnLoad == null || (Boolean.valueOf(startOnLoad).booleanValue())) {
-	                // Start now
-	                scheduler.start();
-	            }
-	
-	            String shutdownPref = cfg.getInitParameter("shutdown-on-unload");
-	            if (shutdownPref != null) {
-	                performShutdown = Boolean.valueOf(shutdownPref).booleanValue();
-	            }
-	            
-            }
-            
-        } catch (NamingException e) {
-            log("Quartz Scheduler failed to initialize: " + e.toString());
-            e.printStackTrace();
-            throw new ServletException(e);
-        } catch (Exception e) {
-            log("Quartz Scheduler failed: " + e.toString());
-            e.printStackTrace();
-            throw new ServletException(e);
-    	}
-    }
+		StdSchedulerFactory sf;
+		Scheduler sched = null;
 
-    public void destroy() {
+		try {
+			if (JNDIFactory.getInstance().getEnvironmentAsBoolean("use_db").booleanValue() == true) {
 
-        if (!performShutdown) {
-            return;
-        }
+				String config = JNDIFactory.getInstance().getEnvironmentAsString("projectPath")
+				+ JNDIFactory.getInstance().getEnvironmentAsString("configPath") + "/quartz.properties";
 
-        try {
-            if (scheduler != null) {
-                scheduler.shutdown();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+				// get Properties
+				sf = new StdSchedulerFactory(config);
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN);
-    }
+				// get a reference to a scheduler
+				try {
+					sched = sf.getScheduler();
+				} catch (SchedulerException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN);
-    }
+				// start the schedule
+				sched.start();
+			}
+
+		} catch (NamingException e) {
+			log("Quartz Scheduler failed to initialize: " + e.toString());
+			e.printStackTrace();
+			throw new ServletException(e);
+		} catch (Exception e) {
+			log("Quartz Scheduler failed: " + e.toString());
+			e.printStackTrace();
+			throw new ServletException(e);
+		}
+	}
+
+	public void destroy() {
+
+		if (!performShutdown) {
+			return;
+		}
+
+		try {
+			if (scheduler != null) {
+				scheduler.shutdown();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.sendError(HttpServletResponse.SC_FORBIDDEN);
+	}
+
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.sendError(HttpServletResponse.SC_FORBIDDEN);
+	}
 
 }

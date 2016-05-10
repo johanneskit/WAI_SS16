@@ -13,9 +13,5 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="/home/kautschuk/Documents/HS Mannheim/WAI/WAI_SS16/Drafts/Datensammler/WebContent/WEB-INF/lib/quartz-2.2.2.jar"/>
-	<classpathentry kind="lib" path="/home/kautschuk/Documents/HS Mannheim/WAI/WAI_SS16/Drafts/Datensammler/WebContent/WEB-INF/lib/slf4j-api-1.7.7.jar"/>
-	<classpathentry kind="lib" path="/home/kautschuk/Documents/HS Mannheim/WAI/WAI_SS16/Drafts/Datensammler/WebContent/WEB-INF/lib/postgresql-9.4.1208.jre7.jar"/>
-	<classpathentry kind="lib" path="/home/kautschuk/Documents/HS Mannheim/WAI/WAI_SS16/Drafts/Datensammler/WebContent/WEB-INF/lib/quartz-jobs-2.2.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

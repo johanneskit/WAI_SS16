@@ -4,10 +4,10 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
 
-<!-- 	<servlet> -->
-<!-- 		<servlet-name>QuartzInitializer</servlet-name> -->
-<!-- 		<servlet-class>utils.QuartzInitializerServlet</servlet-class> -->
-<!-- 		<load-on-startup>1</load-on-startup> -->
-<!-- 	</servlet> -->
+	<servlet>
+		<servlet-name>QuartzInitializer</servlet-name>
+		<servlet-class>utils.QuartzInitializerServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 
 </web-app>
