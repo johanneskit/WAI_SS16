@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 
-org.quartz.properties
-
 public class QuartzInitializerServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;

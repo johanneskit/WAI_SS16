@@ -1,72 +1,42 @@
 package app;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import org.quartz.SchedulerFactory;
+import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerMetaData;
 
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import org.quartz.SchedulerException;
 
-import utils.JNDIFactory;
+public class AppCore
+{
+    public static void main(String[] args) throws SchedulerException
+    {
+        System.out.println("Initializing..");
 
-public class AppCore implements Job {
+        // First we must get a reference to a scheduler
+        SchedulerFactory sf = new StdSchedulerFactory();
+        Scheduler sched = sf.getScheduler();
 
-	JNDIFactory jndiFactory = JNDIFactory.getInstance();
+        System.out.println("Initialization Complete..");
 
-	public AppCore() {
-		
-	}
+        System.out.println("Not Scheduling any Jobs - relying on XML definitions..");
 
-	private void process() throws Exception {
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet resultSet = null;
+        // start the schedule
+        sched.start();
 
-		try {
-			connection = jndiFactory.getConnection("jdbc/waiDB");
+        System.out.println("Scheduler Started..");
 
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery("select id, value from test");			
-			
-			while (resultSet.next()) {
-				//resultSet.getInt("int"), resultSet.getString("value")), ...
-			}
+        // wait 3 minutes to give our jobs a chance to run
+        try {
+            Thread.sleep(3L * 60L * 1000L);
+        } catch (Exception e) {
+        }
+       
+        System.out.println("Shutting Down..");
+        // shut down the scheduler
+        sched.shutdown(true);
 
-		} finally {
-			if (connection != null)
-				try {
-					connection.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			if (statement != null)
-				try {
-					statement.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			if (resultSet != null)
-				try {
-					resultSet.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-		}
-	}
-
-	public void execute(JobExecutionContext context)
-			throws JobExecutionException {
-		try {
-			AppCore core = new AppCore();
-			core.process();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
+        SchedulerMetaData metaData = sched.getMetaData();
+        System.out.println("Executed " + metaData.getNumberOfJobsExecuted() + " jobs.");
+    }
 }
