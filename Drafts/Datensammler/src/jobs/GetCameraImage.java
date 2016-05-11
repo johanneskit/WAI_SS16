@@ -15,9 +15,11 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-public class SimpleJob implements Job
+public class GetCameraImage implements Job
 {
-	String path = "/tmp/img/";
+	static Integer i = 0;
+	
+	static String dir;
 	File file;
 	
 	URL url = null;
@@ -25,7 +27,7 @@ public class SimpleJob implements Job
 	BufferedImage img;
 	
     // Required public empty constructor for job initialization
-    public SimpleJob() {
+    public GetCameraImage() {
     	
     }
    
@@ -33,7 +35,15 @@ public class SimpleJob implements Job
      * fires that is associated with the org.quartz.Job */
     public void execute(JobExecutionContext context) throws JobExecutionException {
     	
-    	file = new File(path + new java.util.Date() + ".jpg");
+    	if(i % 10 == 0) {
+    		dir = "/tmp/img_" + i.toString() + "/";
+    		File newdir = new File(dir);
+    		newdir.mkdir();
+    	}
+    	
+    	i++;
+    	
+    	file = new File(dir + new java.util.Date() + ".jpg");
        
     	try {
     		url = new URL("http://www.thueringer-webcams.de/kunden/mdr/erfurt-mdr/livebild-pal.jpg");

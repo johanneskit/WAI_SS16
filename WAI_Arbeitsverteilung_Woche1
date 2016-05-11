@@ -9,7 +9,6 @@ Christian (Bilder ausliefern):
 Timon (Datensammler Quartz):
 	x zyklisch webcams abrufen
 	x orderstruktur (benennung: <name>_<datum>_<uhrzeit>.jpg)
-		--> TODO: quartz-job der jeden tag neuen ordner anlegt und pfad anpasst
 	- datenbankanbindung (links mit zeitstempel und name verknüpft)
 	- dynamische webcameinfügerei:
 		- Link zum Bild

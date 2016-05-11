@@ -19,7 +19,7 @@
     <schedule>
         <job>
             <name>Job1</name>
-            <job-class>jobs.SimpleJob</job-class>
+            <job-class>jobs.GetCameraImage</job-class>
         </job>
        
         <trigger>
@@ -27,7 +27,7 @@
                 <name>Trigger1</name>
                 <job-name>Job1</job-name>
                 <repeat-count>-1</repeat-count>
-                 <repeat-interval>300000</repeat-interval> <!-- 5 mins -->
+                <repeat-interval>1000</repeat-interval> <!-- 5 mins -->
             </simple>
         </trigger>
 
