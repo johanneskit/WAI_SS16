@@ -10,4 +10,8 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
+	<listener>
+		<listener-class>utils.SystemStartup</listener-class>
+	</listener>
+
 </web-app>

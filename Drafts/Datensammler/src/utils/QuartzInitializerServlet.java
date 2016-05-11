@@ -31,25 +31,23 @@ public class QuartzInitializerServlet extends HttpServlet {
 		Scheduler sched = null;
 
 		try {
-			if (JNDIFactory.getInstance().getEnvironmentAsBoolean("use_db").booleanValue() == true) {
 
-				String config = JNDIFactory.getInstance().getEnvironmentAsString("projectPath")
-				+ JNDIFactory.getInstance().getEnvironmentAsString("configPath") + "/quartz.properties";
+			String config = JNDIFactory.getInstance().getEnvironmentAsString("projectPath")
+			+ JNDIFactory.getInstance().getEnvironmentAsString("configPath") + "/quartz.properties";
 
-				// get Properties
-				sf = new StdSchedulerFactory(config);
+			// get Properties
+			sf = new StdSchedulerFactory(config);
 
-				// get a reference to a scheduler
-				try {
-					sched = sf.getScheduler();
-				} catch (SchedulerException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-				// start the schedule
-				sched.start();
+			// get a reference to a scheduler
+			try {
+				sched = sf.getScheduler();
+			} catch (SchedulerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
+
+			// start the schedule
+			sched.start();
 
 		} catch (NamingException e) {
 			log("Quartz Scheduler failed to initialize: " + e.toString());
