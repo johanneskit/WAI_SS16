@@ -4,6 +4,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class WebCam {
+	
+	String name = null;
+	URL    url  = null;
+	int    prio = 0;
+	
 	public String getName() {
 		return name;
 	}
@@ -16,7 +21,10 @@ public class WebCam {
 	public void setUrl(String url) throws MalformedURLException {
 		this.url = new URL(url);
 	}
-	
-	String name = null;
-	URL url = null;
+	public int getPrio() {
+		return prio;
+	}
+	public void setPrio(int prio) {
+		this.prio = prio;
+	}
 }

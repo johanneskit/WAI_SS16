@@ -25,7 +25,6 @@ import org.quartz.JobExecutionException;
 import utils.JNDIFactory;
 import utils.WebCam;
 
-@SuppressWarnings("resource")
 public class GetCameraImage implements Job
 {
 	private static Logger jlog = Logger.getLogger(GetCameraImage.class);
@@ -61,17 +60,19 @@ public class GetCameraImage implements Job
 				cams = new WebCam[numCams];
 			}
 			
-			resultSet = statement.executeQuery("select id, name, url from webcams;");
+			resultSet = statement.executeQuery("select id, name, url, prio from webcams;");
 			
 			while (resultSet.next()) {
 				int j = resultSet.getInt("id")-1;
+				int prio = resultSet.getInt("prio");
 				String name = resultSet.getString("name");
 				String url  = resultSet.getString("url");
 				
-				jlog.info("Webcam #" + resultSet.getInt("id") + ": " + resultSet.getString("name") + " | " + resultSet.getString("url"));
+				jlog.info("Webcam #" + j + "." + prio + " :: " + name + " :: " + url);
 				
 				cams[j] = new WebCam();
 				
+				cams[j].setPrio(prio);
 				cams[j].setName(name);
 				cams[j].setUrl(url);
 			}
@@ -129,16 +130,24 @@ public class GetCameraImage implements Job
 	    	try {
 	    		for(int j=0; j<numCams; j++) {
 	    	    	i++;
-	    	    	String timestamp = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(new Date());
+	    	    	Date timestamp = new Date();
 	    	    	
-	    	    	file = new File(dir + cams[j].getName() + "_" + timestamp + ".jpg");
+	    	    	file = new File(dir + cams[j].getName() + "_" + new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(timestamp) + ".jpg");
 	    			
 	    			img = ImageIO.read(cams[j].getUrl());
 	    			
 	    			ImageIO.write(img, "jpg", file);
 	    			
-	    			statement.executeUpdate("insert into images (name, time, path) VALUES ('" + cams[j].getName() + "', '"
-	    					+ timestamp + "', '" + file.toString() + "');" );
+	    			statement.executeUpdate("insert into images (name, prio, path, year, month, day, hour, minute) VALUES ('"
+	    					+ cams[j].getName()
+	    					+ "', '" + cams[j].getPrio()
+	    					+ "', '" + file.toString()
+	    					+ "', '" + new SimpleDateFormat("yyyy").format(timestamp)
+	    					+ "', '" + new SimpleDateFormat("MM").format(timestamp) 
+	    					+ "', '" + new SimpleDateFormat("dd").format(timestamp)
+	    					+ "', '" + new SimpleDateFormat("HH").format(timestamp)
+	    					+ "', '" + new SimpleDateFormat("mm").format(timestamp)
+	    					+ "');" );
 	    		}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
