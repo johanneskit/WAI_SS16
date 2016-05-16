@@ -4,9 +4,11 @@ package jobs;
 import java.awt.image.BufferedImage;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -25,6 +27,8 @@ import org.quartz.JobExecutionException;
 import utils.JNDIFactory;
 import utils.WebCam;
 
+//KOMPLETTER REWRITE ERFORDERLICH!!!
+
 public class GetCameraImage implements Job
 {
 	private static Logger jlog = Logger.getLogger(GetCameraImage.class);
@@ -33,14 +37,11 @@ public class GetCameraImage implements Job
 	
 	Connection connection = null;
 	Statement statement = null;
+	PreparedStatement p_statement = null;
 	ResultSet resultSet = null;
 	
 	WebCam[] cams;
 	int numCams;
-	
-	static Integer i = 0;
-	
-	static String dir;
 	
     // Required public empty constructor for job initialization
     public GetCameraImage() {
@@ -68,7 +69,7 @@ public class GetCameraImage implements Job
 				String name = resultSet.getString("name");
 				String url  = resultSet.getString("url");
 				
-				jlog.info("Webcam #" + j + "." + prio + " :: " + name + " :: " + url);
+				jlog.info("Webcam #" + j + " Priorität: " + prio + " Name: " + name + " URL: " + url);
 				
 				cams[j] = new WebCam();
 				
@@ -113,41 +114,34 @@ public class GetCameraImage implements Job
 			e1.printStackTrace();
 		}
     	
-    	// 1000 Files pro Ordner
-    	if(i % 1000 == 0) {
-    		dir = "/tmp/img_" + i.toString() + "/";
-    		File newdir = new File(dir);
-    		newdir.mkdir();
-    	}
-    	
-    	File file;
-    	BufferedImage img;
-    	
     	try {
 	    	connection = jndiFactory.getConnection("jdbc/waiDB");
-			statement  = connection.createStatement();
 	    	
 	    	try {
 	    		for(int j=0; j<numCams; j++) {
-	    	    	i++;
 	    	    	Date timestamp = new Date();
 	    	    	
-	    	    	file = new File(dir + cams[j].getName() + "_" + new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(timestamp) + ".jpg");
+	    	    	File img = new File("/tmp/img.jpg");
+	    	    	
+	    	    	BufferedImage bufImg;
+	    	    	bufImg = ImageIO.read(cams[j].getUrl());
+	    	    	ImageIO.write(bufImg, "jpg", img);
+	    	    	
+	    	    	FileInputStream fis = new FileInputStream(img);
 	    			
-	    			img = ImageIO.read(cams[j].getUrl());
-	    			
-	    			ImageIO.write(img, "jpg", file);
-	    			
-	    			statement.executeUpdate("insert into images (name, prio, path, year, month, day, hour, minute) VALUES ('"
+	    			p_statement = connection.prepareStatement("INSERT INTO images (name, prio, year, month, day, hour, minute, image) "
+	    					+ "VALUES ('"
 	    					+ cams[j].getName()
 	    					+ "', '" + cams[j].getPrio()
-	    					+ "', '" + file.toString()
 	    					+ "', '" + new SimpleDateFormat("yyyy").format(timestamp)
 	    					+ "', '" + new SimpleDateFormat("MM").format(timestamp) 
 	    					+ "', '" + new SimpleDateFormat("dd").format(timestamp)
 	    					+ "', '" + new SimpleDateFormat("HH").format(timestamp)
 	    					+ "', '" + new SimpleDateFormat("mm").format(timestamp)
-	    					+ "');" );
+	    					+ "',?);" );
+	    			
+	    			p_statement.setBinaryStream(1, fis, (int)(img.length()));
+	    			p_statement.executeUpdate();
 	    		}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
