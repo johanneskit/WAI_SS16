@@ -1,0 +1,33 @@
+// Anleitung um mit Github lokal zu arbeiten
+// JEDES mal machen BEVOR man änderungen macht, da es andernfalls Konflikte/ Komplikationen gibt 
+
+1. git shell öffnen
+2. Neuen Ordner erstellen mit mkdir <Verzeichnisname>
+3. cd <Verzeichnisname>
+4. git clone <Link zum eigenen Repository> // z.B https://github.com/Johanneskit/WAI_SS16.git
+5. cd WAI_SS16
+6. git branch upstream //neuen Branch erstellen
+7. git checkout upstream //um auf dem aktuellen Branch zu sein
+8. git pull https://github.com/kautschuk/WAI_SS16.git //ins Verzeichnis "holen"
+9. git checkout master
+10. git merge upstream 			
+
+// Jetzt hat man die aktuellste Version von Timon
+
+11. git checkout master
+//hiermit "updatet" man sein eigentliches lokales Verzeichnis auf das temp verzeichnis in dem sich die aktuelle Version befindet
+12. git push//Die eignene Version auf github.com auf Timons Version in github.com synchronisieren
+//ab hier kann man damit arbeiten
+
+...
+
+//wenn man arbeitet mindestens einmal committen spätestens wenn man fertig ist
+13. git push // auf das eigene github.com repository hochladen
+
+//auf github.com ONLINE anmelden auf eigenes Verzeichnis gehen und pull request machen (BUTTON im eigenen Verzeichnis)
+//Damit schickt man die Änderungen an timon (per mail) -> Hier bitte dokumentieren, dass Timon weis, was gemacht wurde und nicht alles im Code suchen muss ;)
+
+
+nützliche Befehle für die PowerShell:
+- ls aktuelles Verzeichnis ausgeben
+git status --zeigt den aktuellen Branch an und ob Änderungen drin sind / commits notwendig sind

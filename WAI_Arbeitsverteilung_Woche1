@@ -1,0 +1,22 @@
+Benjamin & Isa & Johannes (Benutzerverwaltung):
+	- Datenbank (Admin, User mit Prioritäten)
+	- GUI
+
+Christian (Bilder ausliefern):
+	- Auswahlmaske (Tag, Stunde, ...)
+	- Nur anzeigen was vorhanden ist
+
+Timon (Datensammler Quartz):
+	x zyklisch webcams abrufen
+	x orderstruktur (benennung: <name>_<datum>_<uhrzeit>.jpg)
+	x datenbankanbindung (links mit zeitstempel und name verknüpft)
+	x dynamische webcameinfügerei:
+		- Link zum Bild
+		- Name
+		- Intervall (?) --> nicht auf einfachem Wege realisierbar
+
+	x BSP Bilder zum Testen hochladen --> brauchen wir nicht
+
+Johannes:
+	- Servlet zum Ausliefern mit Rechteprüfung und Komprimator als Stream
+
