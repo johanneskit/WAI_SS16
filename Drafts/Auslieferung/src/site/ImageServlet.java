@@ -54,6 +54,8 @@ public class ImageServlet extends HttpServlet {
 		
 		jlog.info("Query: " + p_statement.toString());
 
+		//Hier rechteprüfung
+		
 			try (ResultSet resultSet = p_statement.executeQuery()) {
 				if (resultSet.next()) {
 					
@@ -75,6 +77,14 @@ public class ImageServlet extends HttpServlet {
 			}
 		} catch (SQLException | NamingException e) {
 			throw new ServletException("Something failed at SQL/DB level.", e);
+		}
+		
+		try {
+			if(connection != null)
+				connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

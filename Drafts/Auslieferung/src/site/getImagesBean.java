@@ -118,6 +118,8 @@ public class getImagesBean {
 		}
 
 		// statement und connection schließen?
+		if(connection != null)
+			connection.close();
 	}
 
 }
