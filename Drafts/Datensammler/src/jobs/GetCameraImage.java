@@ -1,6 +1,7 @@
 
 package jobs;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import java.io.File;
@@ -122,14 +123,22 @@ public class GetCameraImage implements Job
 	    	    	Date timestamp = new Date();
 	    	    	
 	    	    	File img = new File("/tmp/img.jpg");
+	    	    	File img_t = new File("/tmp/img_t.jpg");
 	    	    	
-	    	    	BufferedImage bufImg;
+	    	    	BufferedImage bufImg, bufImg_t;
 	    	    	bufImg = ImageIO.read(cams[j].getUrl());
 	    	    	ImageIO.write(bufImg, "jpg", img);
 	    	    	
+	    	    	bufImg_t = new BufferedImage(50, 50, bufImg.getType());
+    				Graphics2D g = bufImg_t.createGraphics();
+    				g.drawImage(bufImg, 0, 0, 50, 50, null);
+    				g.dispose();
+    				ImageIO.write(bufImg_t, "jpg", img_t);
+	    	    	
 	    	    	FileInputStream fis = new FileInputStream(img);
+	    	    	FileInputStream fis_t = new FileInputStream(img_t);
 	    			
-	    			p_statement = connection.prepareStatement("INSERT INTO images (name, prio, year, month, day, hour, minute, image) "
+	    			p_statement = connection.prepareStatement("INSERT INTO images (name, prio, year, month, day, hour, minute, image, image_t) "
 	    					+ "VALUES ('"
 	    					+ cams[j].getName()
 	    					+ "', '" + cams[j].getPrio()
@@ -138,9 +147,10 @@ public class GetCameraImage implements Job
 	    					+ "', '" + new SimpleDateFormat("dd").format(timestamp)
 	    					+ "', '" + new SimpleDateFormat("HH").format(timestamp)
 	    					+ "', '" + new SimpleDateFormat("mm").format(timestamp)
-	    					+ "',?);" );
+	    					+ "',?,?);" );
 	    			
 	    			p_statement.setBinaryStream(1, fis, (int)(img.length()));
+	    			p_statement.setBinaryStream(2, fis_t, (int)(img_t.length()));
 	    			p_statement.executeUpdate();
 	    		}
 			} catch (IOException e) {

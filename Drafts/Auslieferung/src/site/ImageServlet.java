@@ -18,8 +18,6 @@ import utils.JNDIFactory;
 
 @SuppressWarnings("serial")
 public class ImageServlet extends HttpServlet {
-	
-	private static final String SQL_FIND = "SELECT image FROM images WHERE id = ?";
 
 	Connection connection = null;
 	PreparedStatement p_statement = null;
@@ -32,23 +30,45 @@ public class ImageServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
+		boolean thumb = false;
+		
+		if(request.getParameter("thumb") != null)
+			thumb = true;
+			
 		String imageID = request.getParameter("id");
+		
 		jlog.info("Bild mit ID " + imageID + " angefordert");
+		if(thumb)
+			jlog.info(" als Thumbnail");
 		
 		try {
 		
 		connection = jndiFactory.getConnection("jdbc/waiDB");
-		p_statement = connection.prepareStatement(SQL_FIND);
+		
+		if(thumb)
+			p_statement = connection.prepareStatement("SELECT image_t FROM images WHERE id = ?");
+		else
+			p_statement = connection.prepareStatement("SELECT image FROM images WHERE id = ?");
+		
 		p_statement.setInt(1, Integer.parseInt(imageID));
 		
 		jlog.info("Query: " + p_statement.toString());
 
 			try (ResultSet resultSet = p_statement.executeQuery()) {
 				if (resultSet.next()) {
-					byte[] content = resultSet.getBytes("image");
+					
+					byte[] content;
+					
+					if(thumb)
+						content = resultSet.getBytes("image_t");
+					else
+						content = resultSet.getBytes("image");
+					
 					response.setContentType("image/jpg");
 					response.setContentLength(content.length);
+					
 					response.getOutputStream().write(content);
+					
 				} else {
 					response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404
 				}
