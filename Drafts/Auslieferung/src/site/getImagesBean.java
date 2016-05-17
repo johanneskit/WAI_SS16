@@ -116,8 +116,13 @@ public class getImagesBean {
 			images[i] = new Image(id, text, prio);
 			i++;
 		}
-
-		// statement und connection schließen?
+		
+		if(connection != null)
+			connection.close();
+		if(statement != null)
+			statement.close();
+		if(resultSet != null)
+			resultSet.close();
 	}
 
 }
