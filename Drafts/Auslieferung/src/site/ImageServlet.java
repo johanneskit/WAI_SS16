@@ -86,6 +86,7 @@ public class ImageServlet extends HttpServlet {
 				p_statement.close();
 			if(resultSet != null)
 				resultSet.close();
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
