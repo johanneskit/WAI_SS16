@@ -53,6 +53,8 @@ public class GetCameraImage implements Job {
 				numCams = resultSet.getInt("COUNT");
 				cams = new WebCam[numCams];
 			}
+			
+			jlog.info("Found " + numCams + " Webcams:");
 
 			// Get all Webcam data
 			resultSet = statement.executeQuery("SELECT id, name, url FROM webcams;");
@@ -63,7 +65,7 @@ public class GetCameraImage implements Job {
 				String cam_name = resultSet.getString("name");
 				String url = resultSet.getString("url");
 
-				jlog.info("Found Webcam #" + i + " with ID: " + cam_id + " Name: " + cam_name + " URL: " + url);
+				jlog.info("Webcam #" + i + " with ID " + cam_id + "\"" + cam_name + "\" @ " + url);
 
 				cams[i] = new WebCam();
 
@@ -120,12 +122,9 @@ public class GetCameraImage implements Job {
 					Date timestamp = new Date();
 					BufferedImage bufImg, bufImg_t;
 
-					// Prepare temporary files and streams
+					// Prepare temporary files
 					File img = new File("/tmp/img.jpg");
 					File img_t = new File("/tmp/img_t.jpg");
-
-					FileInputStream fis = new FileInputStream(img);
-					FileInputStream fis_t = new FileInputStream(img_t);
 
 					// Read image from URL and save to temporary file
 					bufImg = ImageIO.read(cams[i].getUrl());
@@ -137,6 +136,10 @@ public class GetCameraImage implements Job {
 					g.drawImage(bufImg, 0, 0, 60, 60, null);
 					g.dispose();
 					ImageIO.write(bufImg_t, "jpg", img_t);
+					
+					// Prepare streams
+					FileInputStream fis = new FileInputStream(img);
+					FileInputStream fis_t = new FileInputStream(img_t);
 
 					// Prepare SQL Query
 					p_statement = connection.prepareStatement(

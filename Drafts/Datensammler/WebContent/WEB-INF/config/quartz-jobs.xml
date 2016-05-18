@@ -27,7 +27,7 @@
                 <name>Trigger1</name>
                 <job-name>Job1</job-name>
                 <repeat-count>-1</repeat-count>
-                <repeat-interval>10000</repeat-interval> <!-- 5 mins -->
+                <repeat-interval>300000</repeat-interval> <!-- 5 mins -->
             </simple>
         </trigger>
 
