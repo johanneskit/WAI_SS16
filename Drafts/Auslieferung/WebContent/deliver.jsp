@@ -26,12 +26,12 @@
 					<%
 					} //if
 					%>
-					<TD>
+					<TD align="center">
 						<a href="/Auslieferung/imageServlet?id=<%out.print(getImages.getImageID(i));%>">
-							<img src="/Auslieferung/imageServlet?id=<%out.print(getImages.getImageID(i));%>&thumb=true">
+							<img src="/Auslieferung/imageServlet?id=<%out.print(getImages.getImageID(i));%>&thumb">
 						</a>
 						<br>
-						<font size="1"><%out.print(getImages.getImageText(i));%></font>
+						<font size="2"><%out.print(getImages.getImageText(i));%></font>
 					</TD>
 				<%
 				if (i % 7 == 6 && i != 1) {
