@@ -26,9 +26,8 @@ public class getImagesBean {
 
 	boolean processError = false;
 
-	public getImagesBean() throws NamingException, SQLException {
-		connection = jndiFactory.getConnection("jdbc/waiDB");
-		statement = connection.createStatement();
+	public getImagesBean() {
+		
 	}
 
 	public boolean getProcessError() {
@@ -39,7 +38,6 @@ public class getImagesBean {
 		return this.numImages;
 	}
 	
-	//Hochzählen im Kontext?!
 	public int getImageID(int i) {
 		return this.images[i].getID();
 	}
@@ -49,80 +47,116 @@ public class getImagesBean {
 		return this.images[i].getText();
 	}
 
-	public void processRequest(HttpServletRequest request) throws SQLException {
+	public void processRequest(HttpServletRequest request) {
 
-		String cam, year, month, day, hour, minute = null;
-		String query = null;
+		try {
+			connection = jndiFactory.getConnection("jdbc/waiDB");
+			statement = connection.createStatement();
 
-		processError = false;
-		if (request == null || request.equals("")) {
-			// Eingabefehler seitens User abfangen
-			processError = true;
-			return;
-		}
-
-		// wenn Feld leer => '*' übergeben (in Johannes Eingabematrix)
-
-		cam = request.getParameter("cam");
-		year = request.getParameter("year");
-		month = request.getParameter("month");
-		day = request.getParameter("day");
-		hour = request.getParameter("hour");
-		minute = request.getParameter("minute");
-
-		// Anzahl Bilder die anzuzeigen sind ermitteln
-		query = "SELECT COUNT(*) FROM images WHERE "
-				+ "name='" + cam
-				+"' AND year='" + year
-				+ "' AND month='" + month
-				+ "' AND day='" + day + "';";
-			 // + "' AND hour='" + hour
-			 // + "' AND minute='" + minute + "';";
-
-		// Beispiel für Range:
-		// "SELECT COUNT(*) FROM images WHERE name='Hamburg' AND minute BETWEEN '35' AND '45';"
-
-		resultSet = statement.executeQuery(query);
-
-		while (resultSet.next()) {
-			numImages = resultSet.getInt("count");
-
-			jlog.info("Anzahl Bilder: " + numImages);
-		}
-		
-		images = new Image[numImages];
-
-		// ID und Timestamp der angeforderten Bilder mittels SQL Query holen
-		query = "SELECT id, prio, year, month, day, hour, minute from images WHERE "
-				+ "name='" + cam
-				+ "' AND year='" + year
-				+ "' AND month='" + month
-				+ "' AND day='" + day + "';";
-				//+ "' AND hour='" + hour
-				//+ "' AND minute='" + minute + "';";
-
-		jlog.info("query: " + query);
-
-		resultSet = statement.executeQuery(query);
-		
-		int i = 0;
-		while (resultSet.next()) {
-			int id = resultSet.getInt("id");
-			String text = resultSet.getString("day") + "." + resultSet.getString("month") + "."
-						+ resultSet.getString("year") + " " + resultSet.getString("hour") + ":"
-						+ resultSet.getString("minute");
-			int prio = resultSet.getInt("prio");
+			String cam, year, month, day, hour, minute;
+			cam = year = month = day = hour = minute = null;
 			
-			images[i] = new Image(id, text, prio);
-			i++;
+			String query = null, selectString = null;
+	
+			processError = false;
+			if (request == null || request.equals("")) {
+				// Eingabefehler seitens User abfangen
+				processError = true;
+				return;
+			}
+	
+			// wenn Feld leer => '*' übergeben (in Eingabematrix)
+			// !!!!!!!!!!!!!!!!!!! ACHTUNG SQL-INJEKTION MÖGLICH !!!!!!!!!!!!!!!!!!!
+	
+			cam = request.getParameter("cam");
+			year = request.getParameter("year");
+			month = request.getParameter("month");
+			day = request.getParameter("day");
+			hour = request.getParameter("hour");
+			minute = request.getParameter("minute");
+			
+			
+			// SQL Query selectString bauen
+			selectString = "cam_name='" + cam
+					+"' AND year='" + year
+					+ "' AND month='" + month
+					+ "' AND day='" + day;
+			
+			if (hour != null && hour != "")
+				selectString = selectString + "' AND hour='" + hour;
+			
+			if (minute == null || minute == "")
+				selectString = selectString + "';";
+			else
+				selectString = selectString + "' AND minute='" + minute + "';";
+	
+			// Anzahl Bilder die anzuzeigen sind ermitteln
+			query = "SELECT COUNT(*) FROM images WHERE " + selectString;
+	
+			// Beispiel für Range:
+			// "SELECT COUNT(*) FROM images WHERE name='Hamburg' AND minute BETWEEN '35' AND '45';"
+	
+			jlog.info("COUNT query: " + query);
+			
+			resultSet = statement.executeQuery(query);
+	
+			while (resultSet.next()) {
+				numImages = resultSet.getInt("COUNT");
+	
+				jlog.info("Anzahl Bilder: " + numImages);
+			}
+			
+			images = new Image[numImages];
+	
+			// ID und Timestamp der angeforderten Bilder mittels SQL Query holen
+			query = "SELECT id, year, month, day, hour, minute from images WHERE " + selectString;
+	
+			jlog.info("SELECT query: " + query);
+	
+			resultSet = statement.executeQuery(query);
+			
+			int i = 0;
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String text = cam + resultSet.getString("day") + "." + resultSet.getString("month") + "."
+							+ resultSet.getString("year") + " " + resultSet.getString("hour") + ":"
+							+ resultSet.getString("minute");
+				
+				images[i] = new Image(id, text);
+				i++;
+			}
+			
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		} finally {
+
+			if (connection != null)
+				try {
+					connection.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			if (statement != null)
+				try {
+					statement.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			
+			if (resultSet != null)
+				try {
+					resultSet.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
 		}
-		
-		if(connection != null)
-			connection.close();
-		if(statement != null)
-			statement.close();
-		if(resultSet != null)
-			resultSet.close();
 	}
 
 }
