@@ -5,15 +5,15 @@ import java.net.URL;
 
 public class WebCam {
 	
-	String name = null;
-	URL    url  = null;
-	int    prio = 0;
+	String cam_name = null;
+	URL    url      = null;
+	int    cam_id   = -1;
 	
-	public String getName() {
-		return name;
+	public String getCamName() {
+		return cam_name;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setCamName(String name) {
+		this.cam_name = name;
 	}
 	public URL getUrl() {
 		return url;
@@ -21,10 +21,10 @@ public class WebCam {
 	public void setUrl(String url) throws MalformedURLException {
 		this.url = new URL(url);
 	}
-	public int getPrio() {
-		return prio;
+	public int getCamID() {
+		return cam_id;
 	}
-	public void setPrio(int prio) {
-		this.prio = prio;
+	public void setCamID(int id) {
+		this.cam_id = id;
 	}
 }

@@ -8,6 +8,6 @@
 
 	<Resource name="jdbc/waiDB" auth="Container" type="javax.sql.DataSource"
 		driverClassName="org.postgresql.Driver" url="jdbc:postgresql://wai-db.hopto.org:5432/wai-db"
-		username="postgres" password="waiss16" maxActive="10" maxIdle="2" maxWait="-1" />
+		username="postgres" password="waiss16" maxActive="100" maxIdle="10" maxWait="-1" />
 
 </Context>
