@@ -118,9 +118,11 @@ public class getImagesBean {
 			int i = 0;
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");
-				String text = cam + resultSet.getString("day") + "." + resultSet.getString("month") + "."
-							+ resultSet.getString("year") + " " + resultSet.getString("hour") + ":"
-							+ resultSet.getString("minute");
+				String text = String.format("%02d", resultSet.getInt("day")) + "."
+							+ String.format("%02d", resultSet.getInt("month")) + "."
+							+ String.format("%04d", resultSet.getInt("year")) + "<br>"
+							+ String.format("%02d", resultSet.getInt("hour")) + ":"
+							+ String.format("%02d", resultSet.getInt("minute"));
 				
 				images[i] = new Image(id, text);
 				i++;

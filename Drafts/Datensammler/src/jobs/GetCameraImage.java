@@ -131,9 +131,9 @@ public class GetCameraImage implements Job {
 					ImageIO.write(bufImg, "jpg", img);
 
 					// Render thumbnail and save to temporary file
-					bufImg_t = new BufferedImage(60, 60, bufImg.getType());
+					bufImg_t = new BufferedImage(100, 100, bufImg.getType());
 					Graphics2D g = bufImg_t.createGraphics();
-					g.drawImage(bufImg, 0, 0, 60, 60, null);
+					g.drawImage(bufImg, 0, 0, 100, 100, null);
 					g.dispose();
 					ImageIO.write(bufImg_t, "jpg", img_t);
 					
