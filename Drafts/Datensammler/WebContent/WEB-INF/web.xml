@@ -4,6 +4,12 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
 
+	<resource-env-ref>
+  		<description>DataSource</description>
+  		<resource-env-ref-name>jdbc/waiDB</resource-env-ref-name>
+ 		<resource-env-ref-type>javax.sql.DataSource</resource-env-ref-type>
+	</resource-env-ref>
+
 	<servlet>
 		<servlet-name>QuartzInitializer</servlet-name>
 		<servlet-class>utils.QuartzInitializerServlet</servlet-class>

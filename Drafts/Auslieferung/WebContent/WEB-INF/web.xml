@@ -6,6 +6,12 @@
 	
 	<display-name>Auslieferung</display-name>
 	
+	<resource-env-ref>
+  		<description>DataSource</description>
+  		<resource-env-ref-name>jdbc/waiDB</resource-env-ref-name>
+ 		<resource-env-ref-type>javax.sql.DataSource</resource-env-ref-type>
+	</resource-env-ref>
+	
 	<welcome-file-list>
 		<welcome-file>testform.html</welcome-file>
 	</welcome-file-list>
