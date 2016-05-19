@@ -40,10 +40,7 @@ public class BenutzerEdit extends HttpServlet {
 			id = Integer.valueOf(request.getParameter("id"));
 		}
 				
-		if(action.equals("add")){
-			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/add.jsp");
-			dispatcher.forward(request, response);		
-		} else if(action.equals("edit")) {			
+		if(action.equals("edit")) {			
 			try {
 				Benutzer benutzer = benutzerDao.get(id);
 				request.setAttribute("benutzer", benutzer);
@@ -67,23 +64,17 @@ public class BenutzerEdit extends HttpServlet {
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
-		
-		Integer id = null;
-		
-		if(request.getParameter("id") != null) {
-			id = Integer.valueOf(request.getParameter("id"));
-		}
-		
+				
 		String benutzername = request.getParameter("benutzername");
 		int prioritaet = Integer.parseInt(request.getParameter("prioritaet"));
-		String passwort = request.getParameter("passwort");		
+		String passwort = request.getParameter("passwort");	
+		int id = Integer.valueOf(request.getParameter("id"));
 		
 		Benutzer benutzer = new Benutzer();		
 		benutzer.setBenutzername(benutzername);
 		benutzer.setPrioritaet(prioritaet);	
 		benutzer.setPasswort(passwort);
-		if(id !=  null)
-			benutzer.setId(id);
+		benutzer.setId(id);
 		
 		try {		
 			benutzerDao.save(benutzer);

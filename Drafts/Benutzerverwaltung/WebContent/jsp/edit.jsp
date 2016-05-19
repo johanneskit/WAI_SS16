@@ -12,12 +12,8 @@
 			<tbody>
 				<tr>
 					<td>Benutzername:</td>
-					<td><input type="text" name="benutzername" value="${benutzer.benutzername}"></td>		
-				</tr>
-				<tr>		
-					<td>Passwort:</td>	
-					<td><input type="text" name="passwort" value="${benutzer.passwort}"></td>
-				</tr>				
+					<td><c:out value="${benutzer.benutzername}"/></td>		
+				</tr>			
 				<tr>		
 					<td>Priorität:</td>	
 					<td><input type="text" name="prioritaet" value="${benutzer.prioritaet}"></td>
