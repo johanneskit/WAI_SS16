@@ -11,12 +11,12 @@
 		<table border="1">
 			<tbody>
 				<tr>
-					<td>Benutzername:</td>
-					<td><c:out value="${benutzer.benutzername}"/></td>		
+					<td>Name:</td>
+					<td><input type="text" name="name" value="${webcam.name}"></td>		
 				</tr>			
 				<tr>		
-					<td>Priorität:</td>	
-					<td><input type="text" name="prioritaet" value="${benutzer.prioritaet}"></td>
+					<td>Url:</td>	
+					<td><input type="text" name="url" value="${webcam.url}"></td>
 				</tr>				
 				<tr>	
 					<td colspan="2">
@@ -25,7 +25,7 @@
 				</tr>				
 			</tbody>
 		</table>
-		<input type="hidden" name="id" value="${benutzer.id}">
+		<input type="hidden" name="id" value="${webcam.id}">
 	</form>
   </body>
 </html>

@@ -11,19 +11,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.BenutzerDao;
+import dao.WebcamDao;
 import dao.DaoFactory;
-import exception.BenutzerNotDeletedException;
-import exception.BenutzerNotFoundException;
-import exception.BenutzerNotSavedException;
+import exception.WebcamNotDeletedException;
+import exception.WebcamNotFoundException;
+import exception.WebcamNotSavedException;
 
-import model.Benutzer;
+import model.Webcam;
 
-public class BenutzerEdit extends HttpServlet {	
+public class WebcamEdit extends HttpServlet {	
 	
 	private static final long serialVersionUID = 1L;
 	
-	final BenutzerDao benutzerDao = DaoFactory.getInstance().getBenutzerDao();
+	final WebcamDao webcamDao = DaoFactory.getInstance().getWebcamDao();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
@@ -40,22 +40,26 @@ public class BenutzerEdit extends HttpServlet {
 			id = Integer.valueOf(request.getParameter("id"));
 		}
 				
-		if(action.equals("edit")) {			
+		if(action.equals("add")){
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/add.jsp");
+			dispatcher.forward(request, response);	
+		}
+		else if(action.equals("edit")) {			
 			try {
-				Benutzer benutzer = benutzerDao.get(id);
-				request.setAttribute("benutzer", benutzer);
+				Webcam webcam = webcamDao.get(id);
+				request.setAttribute("webcam", webcam);
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/edit.jsp");
 				dispatcher.forward(request, response);
-			} catch (BenutzerNotFoundException e) {
+			} catch (WebcamNotFoundException e) {
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/error.jsp");
 				request.setAttribute("exception", e.getMessage());
 				dispatcher.forward(request, response);
 			}				
 		} else if(action.equals("delete")) {			
 			try {
-				benutzerDao.delete(id);
+				webcamDao.delete(id);
 				response.sendRedirect(request.getContextPath() + "/list");
-			} catch (BenutzerNotDeletedException e) {
+			} catch (WebcamNotDeletedException e) {
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/error.jsp");
 				request.setAttribute("exception", e.getMessage());
 				dispatcher.forward(request, response);
@@ -65,21 +69,26 @@ public class BenutzerEdit extends HttpServlet {
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 				
-		String benutzername = request.getParameter("benutzername");
-		int prioritaet = Integer.parseInt(request.getParameter("prioritaet"));
-		String passwort = request.getParameter("passwort");	
-		int id = Integer.valueOf(request.getParameter("id"));
+		Integer id = null;
 		
-		Benutzer benutzer = new Benutzer();		
-		benutzer.setBenutzername(benutzername);
-		benutzer.setPrioritaet(prioritaet);	
-		benutzer.setPasswort(passwort);
-		benutzer.setId(id);
+		if(request.getParameter("id") != null) {
+			id = Integer.valueOf(request.getParameter("id"));
+		}
+		
+		
+		String name = request.getParameter("name");
+		String url = request.getParameter("url");	
+		
+		Webcam webcam = new Webcam();		
+		webcam.setName(name);
+		webcam.setUrl(url);	
+		if(id != null)
+			webcam.setId(id);
 		
 		try {		
-			benutzerDao.save(benutzer);
+			webcamDao.save(webcam);
 			response.sendRedirect(request.getContextPath() + "/list");
-		}  catch (BenutzerNotSavedException e) {
+		}  catch (WebcamNotSavedException e) {
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/error.jsp");
 			request.setAttribute("exception", e.getMessage());
 			dispatcher.forward(request, response);

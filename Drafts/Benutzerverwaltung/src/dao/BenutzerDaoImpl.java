@@ -73,21 +73,11 @@ public class BenutzerDaoImpl implements BenutzerDao {
 		Connection connection = null;		
 		try {
 			connection = jndi.getConnection("jdbc/libraryDB");			
-			if (benutzer.getId() == null) {
-				PreparedStatement pstmt = connection.prepareStatement("insert into benutzer (benutzername, passwort, prioritaet) values (?,?,?)");				
-				pstmt.setString(1, benutzer.getBenutzername());
-				pstmt.setString(2, benutzer.getPasswort());
-				//pstmt.setInt(3, benutzer.getId());
-				pstmt.setInt(3, benutzer.getPrioritaet());
+				PreparedStatement pstmt = connection.prepareStatement("update benutzer set prioritaet = ? where id = ?");
+				pstmt.setInt(1, benutzer.getPrioritaet());
+				pstmt.setInt(2, benutzer.getId());
 				pstmt.executeUpdate();
-			} else {
-				PreparedStatement pstmt = connection.prepareStatement("update benutzer set benutzername = ?, passwort = ?, prioritaet = ? where id = ?");
-				pstmt.setString(1, benutzer.getBenutzername());
-				pstmt.setString(2, benutzer.getPasswort());
-				pstmt.setInt(3, benutzer.getPrioritaet());
-				pstmt.setInt(4, benutzer.getId());
-				pstmt.executeUpdate();
-			}			
+			//}			
 		} catch (Exception e) {
 			throw new BenutzerNotSavedException();
 		} finally {

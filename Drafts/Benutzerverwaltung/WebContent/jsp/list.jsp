@@ -27,7 +27,5 @@
 			</c:forEach>	
   		</tbody>
   	</table>
-  	<br>
-  	<a href="edit?action=add">Neuen Benutzer hinzufügen</a>
   </body>
 </html>
