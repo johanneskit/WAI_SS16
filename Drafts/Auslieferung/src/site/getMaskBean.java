@@ -23,7 +23,7 @@ public class getMaskBean {
 
 	int numCams, numYears, numMonths, numDays, numHours, numMinutes = 0;
 	String cam, year, month, day, hour, minute = null;
-	String[] cams, years = null;
+	String[] cams, years, months, days, hours, minutes = null;
 
 	public getMaskBean() {
 		
@@ -43,7 +43,6 @@ public class getMaskBean {
 		}
 		
 		setCams();
-		setYears();
 	}
 
 	public void closeDB() {
@@ -69,8 +68,35 @@ public class getMaskBean {
 			}
 	}
 	
+	public void processRequest(HttpServletRequest request) {
+		cam = request.getParameter("cam");
+		year = request.getParameter("year");
+		month = request.getParameter("month");
+		day = request.getParameter("day");
+		hour = request.getParameter("hour");
+		
+		if(cam != null)
+			setYears();
+		if(year != null)
+			setMonths();
+		if(month != null)
+			setDays();
+		if(day != null)
+			setHours();
+		if(hour != null)
+			setMinutes();
+	}
+	
+	//Camera
 	public int getNumCams() {
 		return numCams;
+	}
+	
+	public String getSelectedCam() {
+		if(cam != null)
+			return cam;
+		else
+			return "";
 	}
 	
 	public void setCams() {
@@ -78,7 +104,6 @@ public class getMaskBean {
 		try {
 			// Count webcams
 			String query = "SELECT COUNT(DISTINCT cam_name) FROM images;";
-			
 			resultSet = statement.executeQuery(query);
 			
 			while (resultSet.next()) {
@@ -106,8 +131,16 @@ public class getMaskBean {
 		return cams[i];
 	}
 
+	//Year
 	public int getNumYears() {
 		return numYears;
+	}
+	
+	public String getSelectedYear() {
+		if(year != null)
+			return year;
+		else
+			return "";
 	}
 	
 	public String getYear(int i) {
@@ -118,8 +151,7 @@ public class getMaskBean {
 
 		try {
 			// Count years
-			String query = "SELECT COUNT(DISTINCT year) FROM images;";
-			
+			String query = "SELECT COUNT(DISTINCT year) FROM images WHERE cam_name='" + cam + "';";
 			resultSet = statement.executeQuery(query);
 			
 			while (resultSet.next()) {
@@ -128,7 +160,7 @@ public class getMaskBean {
 			
 			years = new String[numYears];
 			
-			query = "SELECT DISTINCT year FROM images;";
+			query = "SELECT DISTINCT year FROM images WHERE cam_name='" + cam + "';";
 			resultSet = statement.executeQuery(query);
 			
 			int i=0;
@@ -142,22 +174,187 @@ public class getMaskBean {
 			e.printStackTrace();
 		}
 	}
-	
 
+	//Month
 	public int getNumMonths() {
 		return numMonths;
 	}
+	
+	public String getSelectedMonth() {
+		if(month != null)
+			return month;
+		else
+			return "";
+	}
+	
+	public String getMonth(int i) {
+		return months[i];
+	}
+	
+	public void setMonths() {
+		try {
+			// Count months
+			String query = "SELECT COUNT(DISTINCT month) FROM images WHERE cam_name='" + cam + "' AND year='" + year + "';";
+			resultSet = statement.executeQuery(query);
+			
+			while (resultSet.next()) {
+				numMonths = resultSet.getInt("COUNT");
+			}
+			
+			months = new String[numMonths];
+			
+			query = "SELECT DISTINCT month FROM images WHERE cam_name='" + cam + "' AND year='" + year + "';";
+			resultSet = statement.executeQuery(query);
+			
+			int i=0;
+			while (resultSet.next()) {
+				months[i] = resultSet.getString("month");
+				i++;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	//Day
 	public int getNumDays() {
 		return numDays;
 	}
+	
+	public String getSelectedDay() {
+		if(day != null)
+			return day;
+		else
+			return "";
+	}
 
+	public String getDay(int i) {
+		return days[i];
+	}
+	
+	public void setDays() {
+		try {
+			// Count days
+			String query = "SELECT COUNT(DISTINCT day) FROM images WHERE cam_name='" + cam + "' AND year='" + year + "' AND month='" + month + "';";
+			resultSet = statement.executeQuery(query);
+			
+			while (resultSet.next()) {
+				numDays = resultSet.getInt("COUNT");
+			}
+			
+			days = new String[numDays];
+			
+			query = "SELECT DISTINCT day FROM images WHERE cam_name='" + cam + "' AND year='" + year + "' AND month='" + month + "';";
+			resultSet = statement.executeQuery(query);
+			
+			int i=0;
+			while (resultSet.next()) {
+				days[i] = resultSet.getString("day");
+				i++;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//Hour
 	public int getNumHours() {
 		return numHours;
 	}
+	
+	public String getSelectedHour() {
+		if(hour != null)
+			return hour;
+		else
+			return "";
+	}
 
+	public String getHour(int i) {
+		return hours[i];
+	}
+	
+	public void setHours() {
+		try {
+			// Count hours
+			String query = "SELECT COUNT(DISTINCT hour) FROM images WHERE cam_name='" + cam + "' AND year='" + year + "' AND month='" + month + "' AND day='" + day + "';";
+			resultSet = statement.executeQuery(query);
+			
+			while (resultSet.next()) {
+				numHours = resultSet.getInt("COUNT");
+			}
+			numHours++;
+			
+			hours = new String[numHours];
+			
+			query = "SELECT DISTINCT hour FROM images WHERE cam_name='" + cam + "' AND year='" + year + "' AND month='" + month + "' AND day='" + day + "';";
+			resultSet = statement.executeQuery(query);
+			
+			int i=0;
+			while (resultSet.next()) {
+				hours[i] = resultSet.getString("hour");
+				i++;
+			}
+			
+			hours[i] = "*";
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	//Minute
 	public int getNumMinutes() {
 		return numMinutes;
+	}
+
+	public String getMinute(int i) {
+		return minutes[i];
+	}
+	
+	public void setMinutes() {
+		try {
+			
+			// If hours is wildcarded, minutes can only be wildcarded too
+			if (hour.equals("*")) {
+				numMinutes = 1;
+				minutes = new String[1];
+				minutes[0] = "*";
+				
+				jlog.info("hours is wildcarded, this should return wildcarding minutes!");
+				
+				return;
+			}
+
+			// Count minutes
+			String query = "SELECT COUNT(DISTINCT minute) FROM images WHERE cam_name='" + cam + "' AND year='" + year + "' AND month='" + month + "' AND day='" + day + "' AND hour='" + hour + "';";		
+			resultSet = statement.executeQuery(query);
+			
+			while (resultSet.next()) {
+				numMinutes = resultSet.getInt("COUNT") + 1;
+			}
+			
+			minutes = new String[numMinutes];
+			
+			query = "SELECT DISTINCT minute FROM images WHERE cam_name='" + cam + "' AND year='" + year + "' AND month='" + month + "' AND day='" + day + "' AND hour='" + hour + "';";
+			resultSet = statement.executeQuery(query);
+			
+			int i=0;
+			while (resultSet.next()) {
+				minutes[i] = resultSet.getString("minute");
+				i++;
+			}
+			
+			minutes[i] = "*";
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

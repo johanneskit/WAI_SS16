@@ -80,11 +80,10 @@ public class getImagesBean {
 					+ "' AND month='" + month
 					+ "' AND day='" + day;
 			
-			if (hour != null && hour != "")
-				selectString = selectString + "' AND hour='" + hour;
-			
-			if (minute == null || minute == "")
+			if (hour.equals("*"))
 				selectString = selectString + "';";
+			else if (minute.equals("*"))
+				selectString = selectString + "' AND hour='" + hour + "';";
 			else
 				selectString = selectString + "' AND minute='" + minute + "';";
 	
