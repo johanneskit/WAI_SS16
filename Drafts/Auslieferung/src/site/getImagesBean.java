@@ -53,8 +53,7 @@ public class getImagesBean {
 			connection = jndiFactory.getConnection("jdbc/waiDB");
 			statement = connection.createStatement();
 
-			String cam, year, month, day, hour, minute;
-			cam = year = month = day = hour = minute = null;
+			String cam, year, month, day, hour, minute = null;
 			
 			String query = null, selectString = null;
 	
@@ -65,7 +64,6 @@ public class getImagesBean {
 				return;
 			}
 	
-			// wenn Feld leer => '*' übergeben (in Eingabematrix)
 			// !!!!!!!!!!!!!!!!!!! ACHTUNG SQL-INJEKTION MÖGLICH !!!!!!!!!!!!!!!!!!!
 	
 			cam = request.getParameter("cam");
@@ -78,7 +76,7 @@ public class getImagesBean {
 			
 			// SQL Query selectString bauen
 			selectString = "cam_name='" + cam
-					+"' AND year='" + year
+					+ "' AND year='" + year
 					+ "' AND month='" + month
 					+ "' AND day='" + day;
 			
