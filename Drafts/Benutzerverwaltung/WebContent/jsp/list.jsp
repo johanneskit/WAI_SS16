@@ -13,6 +13,7 @@
 				<td>Benutzername</td>
 				<td>Passwort</td>
 				<td>Priorität</td>
+				<td>Webcams</td>
 				<td>Id</td>	
 			</tr>			
 			<c:forEach var="benutzer" items="${benutzer}">
@@ -20,6 +21,7 @@
 					<td><c:out value="${benutzer.benutzername}"/></td>					
 					<td><c:out value="${benutzer.passwort}"/></td>
 					<td><c:out value="${benutzer.prioritaet}"/></td>
+					<td><c:out value="${benutzer.webcams}"/></td>
 					<td><c:out value="${benutzer.id}"/></td>
 					<td><a href="edit?action=edit&id=${benutzer.id}">Ändern</a></td>
 					<td><a href="edit?action=delete&id=${benutzer.id}">Löschen</a></td>

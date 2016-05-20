@@ -5,6 +5,7 @@ public class Benutzer {
 	    private String benutzername;
 	    private int prioritaet;
 	    private String passwort;
+	    private String webcams;
 	    
 	    public Integer getId() 
 	    {
@@ -44,5 +45,15 @@ public class Benutzer {
 		public void setPasswort(String passwort) 
 		{
 			this.passwort = passwort;
+		}
+		
+		public String getWebcams() 
+		{
+			return webcams;
+		}
+
+		public void setWebcams(String webcams) 
+		{
+			this.webcams = webcams;
 		}
 	}

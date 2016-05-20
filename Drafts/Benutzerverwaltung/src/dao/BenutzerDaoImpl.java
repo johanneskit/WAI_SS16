@@ -94,7 +94,7 @@ public class BenutzerDaoImpl implements BenutzerDao {
 		try {
 			connection = jndi.getConnection("jdbc/libraryDB");			
 			
-				PreparedStatement pstmt = connection.prepareStatement("select benutzername, passwort, id, prioritaet from benutzer");				
+				PreparedStatement pstmt = connection.prepareStatement("select benutzername, passwort, id, prioritaet, webcams from benutzer");				
 				ResultSet rs = pstmt.executeQuery();
 								
 				while (rs.next()) {
@@ -103,6 +103,7 @@ public class BenutzerDaoImpl implements BenutzerDao {
 					benutzer.setBenutzername(rs.getString("benutzername"));
 					benutzer.setPasswort(rs.getString("passwort"));
 					benutzer.setPrioritaet(rs.getInt("prioritaet"));
+					benutzer.setWebcams(rs.getString("webcams"));
 					benutzerList.add(benutzer);
 				}			
 			
