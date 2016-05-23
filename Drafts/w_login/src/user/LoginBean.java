@@ -1,4 +1,4 @@
-package cal;
+package user;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -11,14 +11,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Hashtable;
 import user.*;
+//import utils.JNDIFactory;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
 @SuppressWarnings("unused")
-public class Login {
+public class LoginBean {
 
 	String name = null;
 	String password = null;
+	//private static Logger log = Logger.getLogger(LoginBean.class);
 
 	boolean processError = true;
 
@@ -37,6 +40,7 @@ public class Login {
 	public void processRequest(HttpServletRequest request) throws SQLException {
 		this.processError = true;
 		Connection connection;
+		
 
 //		String username = "ss16-gruppe8";
 //		String pw = "Znvgsrn6";
@@ -53,7 +57,7 @@ public class Login {
 
 			String temp_name = request.getParameter("name");
 			String temp_pw = request.getParameter("pw");
-
+			
 			if (temp_name == null || temp_name == "" || temp_pw == null || temp_pw == "") {
 				// nichts eingegeben
 				//this.processError = true;
@@ -87,6 +91,7 @@ public class Login {
 					if (text.equals(rs.getString("passwort"))) {
 
 						//pstmt.close();
+//						log.info(rs.getString("benutzername") + " has logged in");
 						stmt.close();
 						rs.close();
 						connection.close();

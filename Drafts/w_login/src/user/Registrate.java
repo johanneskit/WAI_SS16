@@ -12,7 +12,11 @@ import java.sql.Statement;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+
 public class Registrate {
+	
+	private static Logger log = Logger.getLogger(Registrate.class);
 	String name = null;
 	String password1 = null;
 	String password2 = null;
@@ -33,9 +37,7 @@ public class Registrate {
 		this.userExists = false;
 		this.pw_notEqual = false;
 		Connection connection;
-//		String username = "ss16-gruppe8";
-//		String pw = "Znvgsrn6";
-//		String url = "jdbc:postgresql://141.19.96.94/ss16-gruppe8_DB";
+
 		 String pw = "waiss16";
 		 String username = "postgres";
 		 String url = "jdbc:postgresql://wai-db.hopto.org:5432/wai-db";
@@ -54,7 +56,7 @@ public class Registrate {
 
 			String newUser = request.getParameter("newUsername");
 
-			PreparedStatement pstmt = connection.prepareStatement("SELECT ? FROM benutzer");// WHERE name = ? ;");
+//			PreparedStatement pstmt = connection.prepareStatement("SELECT ? FROM benutzer");// WHERE name = ? ;");
 //			pstmt.setString(1, "*");//"'" + newUser + "'");
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM benutzer");
@@ -77,13 +79,16 @@ public class Registrate {
 			byte[] digest = md.digest();
 			// format to hex with left zero padding
 			text = String.format("%064x", new java.math.BigInteger(1, digest));
-
+			
+			PreparedStatement pstmt = null;
 			pstmt = connection.prepareStatement
 					("INSERT INTO benutzer(benutzername, passwort, prioritaet) VALUES(?, ?, ?)");
 			pstmt.setString(1, newUser);
 			pstmt.setString(2, text);
 			pstmt.setInt(3, 3);
 			pstmt.executeUpdate();
+			
+			//log.info("new User : " + rs.getString("benutzername"));
 
 			pstmt.close();
 			rs.close();
