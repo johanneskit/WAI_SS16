@@ -8,15 +8,20 @@
 <jsp:useBean id="manage" scope="session" class="cal.Verwaltung" />
 
 
-<!-- html table goes here -->
+
 <CENTER>
-		<TR>
-			<font size = 5>			
-				Admin.
-			</font>
-	 	</TR>
-</FORM>
+<br>
+	<form method=GET action=registrate.html>
+
+		<input type=submit name=action value="Benutzerverwaltung">
+		<input type=submit name=action value="Kamera anlegen">
+		<input type=submit name=action value="Bilder anzeigen">
+
+	</form>
+<hr>
+
 <BR>
+</CENTER>
 </BODY>
 </HTML>
 

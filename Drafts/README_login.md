@@ -23,3 +23,20 @@ Was ich noch als Problem sehe:
 	
 Falls am Ende noch Puffer ist würde ich mich noch um die Punkte 1&2 und evtl. 3&4 kümmern.
 Ich werde mich als nächstes um die Auswahlseite für den Admin kümmern.
+
+
+
+
+
+
+
+
+Weiter geht´s:
+
+Sobald man sich eingeloggt hat wird nachgeschaut, ob man admin ist oder nicht und gleichzeitig eine Session
+angelegt in/aus der (nur) ein Parameter abgelegt/rausgeholt wird(Priority(Integer)).
+Auf der .jsp-Seite wird das Ergebnis ausgewertet. Falls man also admin ist bekommt man 3 Buttons zu sehen.
+(Benutzerverwaltung, Cam anlegen, Bilder). Die "nicht admin"- Seite habe ich jetzt noch nicht gemacht, 
+weil ich mir nicht ganz sicher bin, wie die aussehen soll. Müssten wir morgen noch klären ;).
+Ansonsten:	Es läuft alles fehlerfrei (bisher :D) und ich bin für Anregungen/Änderungen usw. offen.
+Alles weitere dann morgen :)
