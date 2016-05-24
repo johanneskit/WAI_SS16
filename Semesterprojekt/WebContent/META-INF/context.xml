@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+
+	<Environment name="projectPath"
+		value="/home/kautschuk/Documents/HS Mannheim/WAI/WAI_SS16/Semesterprojekt/WebContent"
+		type="java.lang.String" override="false" />
+	<Environment name="configPath" value="/WEB-INF/config"
+		type="java.lang.String" override="false" />
+
+	<Resource name="jdbc/waiDB" auth="Container" type="javax.sql.DataSource"
+		driverClassName="org.postgresql.Driver" url="jdbc:postgresql://wai-db.hopto.org:5432/wai-db"
+		username="postgres" password="waiss16" maxActive="10" maxIdle="2" maxWait="-1" />
+
+</Context>
