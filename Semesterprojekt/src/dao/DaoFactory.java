@@ -16,4 +16,8 @@ public class DaoFactory {
 	public WebcamDao getWebcamDao() {
 		return new WebcamDaoImpl();
 	}
+	
+	public BenutzerDao getBenutzerDao() {
+		return new BenutzerDaoImpl();
+	}
 }

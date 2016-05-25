@@ -34,6 +34,25 @@
 		<servlet-name>ImageServlet</servlet-name>
 		<servlet-class>servlets.ImageServlet</servlet-class>
 	</servlet>
+	
+	<servlet>
+    	<servlet-name>BenutzerList</servlet-name>
+   	 	<servlet-class>servlets.BenutzerList</servlet-class>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>BenutzerEdit</servlet-name>
+    	<servlet-class>servlets.BenutzerEdit</servlet-class>
+  	</servlet>
+  	
+ 	<servlet-mapping>
+    	<servlet-name>BenutzerList</servlet-name>
+    	<url-pattern>/listBenutzer</url-pattern>
+  	</servlet-mapping>
+  	
+  	<servlet-mapping>
+    	<servlet-name>BenutzerEdit</servlet-name>
+    	<url-pattern>/editBenutzer</url-pattern>
+  	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>WebcamList</servlet-name>
