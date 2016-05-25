@@ -29,6 +29,15 @@ public class ImageServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		HttpSession session = null;
+		session = request.getSession(false);
+		
+		if (session == null) {
+			//kein bild an unangemeldte ausliefern!
+			response.sendError(HttpServletResponse.SC_FORBIDDEN); // 403
+			return;
+		}
 
 		boolean thumb = false;
 
@@ -36,6 +45,7 @@ public class ImageServlet extends HttpServlet {
 			thumb = true;
 
 		String imageID = request.getParameter("id");
+		String webcams = "", cam_id = "-1"; 
 
 		jlog.info("Bild mit ID " + imageID + " angefordert");
 		if (thumb)
@@ -44,6 +54,63 @@ public class ImageServlet extends HttpServlet {
 		try {
 
 			connection = jndiFactory.getConnection("jdbc/waiDB");
+			
+			//Rechteprüfung:
+			
+			//Benutzer ID aus Context holen
+			String user_id = session.getAttribute("user_id").toString();
+			
+			//liste "webcams" der cam_id's aus benutzer DB holen
+			p_statement = connection.prepareStatement("SELECT webcams FROM benutzer WHERE benutzername = ?");
+			p_statement.setString(1, user_id);
+			
+			try (ResultSet resultSet = p_statement.executeQuery()) {
+				if (resultSet.next()) {
+					webcams = resultSet.getString("webcams");
+				}
+			} catch (SQLException e) {
+				throw new ServletException("Something failed at SQL/DB level.", e);
+			}
+			
+			//cam_id aus images DB holen
+			p_statement = connection.prepareStatement("SELECT cam_id FROM imgages WHERE id = ?");
+			p_statement.setInt(1, Integer.parseInt(imageID));
+			
+			try (ResultSet resultSet = p_statement.executeQuery()) {
+				if (resultSet.next()) {
+					cam_id = String.valueOf(resultSet.getInt("cam_id"));
+				}
+				
+			} catch (SQLException e) {
+				throw new ServletException("Something failed at SQL/DB level.", e);
+			}
+			
+			//cam_id in Liste webcams suchen
+			String[] parts = webcams.split(" ");
+			for(int i = 0; i < parts.length; i++) {
+			    if(!parts[i].equals(cam_id)) {
+					//kein bild an unauthorisierte ausliefern!
+					response.sendError(HttpServletResponse.SC_FORBIDDEN); // 403
+					
+					//alles schließen und beenden
+					try {
+						if (connection != null)
+							connection.close();
+						if (p_statement != null)
+							p_statement.close();
+						if (resultSet != null)
+							resultSet.close();
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					return;
+			    }
+			}
+			
+			// ENDE Rechteprüfung
 
 			if (thumb)
 				p_statement = connection.prepareStatement("SELECT image_t FROM images WHERE id = ?");
@@ -77,7 +144,7 @@ public class ImageServlet extends HttpServlet {
 			throw new ServletException("Something failed at SQL/DB level.", e);
 		}
 
-		// WIRFT "org.postgresql.util.PSQLException: This statement has been
+		// TODO: wirft "org.postgresql.util.PSQLException: This statement has been
 		// closed" !!!
 		try {
 			if (connection != null)
