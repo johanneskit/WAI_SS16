@@ -61,12 +61,14 @@ public class ImageServlet extends HttpServlet {
 			String user_id = session.getAttribute("user_id").toString();
 			
 			//liste "webcams" der cam_id's aus benutzer DB holen
+
 			p_statement = connection.prepareStatement("SELECT webcams FROM benutzer WHERE benutzername = ?");
 			p_statement.setString(1, user_id);
 			
 			try (ResultSet resultSet = p_statement.executeQuery()) {
 				if (resultSet.next()) {
 					webcams = resultSet.getString("webcams");
+
 				}
 			} catch (SQLException e) {
 				throw new ServletException("Something failed at SQL/DB level.", e);
@@ -78,7 +80,9 @@ public class ImageServlet extends HttpServlet {
 			
 			try (ResultSet resultSet = p_statement.executeQuery()) {
 				if (resultSet.next()) {
+
 					cam_id = String.valueOf(resultSet.getInt("cam_id"));
+
 				}
 				
 			} catch (SQLException e) {

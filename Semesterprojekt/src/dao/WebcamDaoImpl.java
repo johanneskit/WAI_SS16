@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class WebcamDaoImpl implements WebcamDao {
 	}
 
 	@Override
-	public void save(Webcam webcam) {
+	public void save(Webcam webcam, String user_id) {
 		
 		if (webcam == null)
 			throw new IllegalArgumentException("webcam can not be null");
@@ -83,7 +84,35 @@ public class WebcamDaoImpl implements WebcamDao {
 				pstmt.setString(2, webcam.getUrl());
 				pstmt.setInt(3, webcam.getId());
 				pstmt.executeUpdate();
-			}			
+			}
+			
+			Statement stmt = connection.createStatement();		
+			ResultSet rs = stmt.executeQuery("select MAX(id) as newestID from webcams");
+			String webcam_id = null;
+			
+			if(rs.next())
+			{
+				webcam_id = String.valueOf(rs.getInt("newestID"));
+			}
+			
+			PreparedStatement pstmt = connection.prepareStatement("select webcams from benutzer where benutzername = ?");		
+			pstmt.setString(1, user_id);
+			ResultSet rs2 = pstmt.executeQuery();
+			
+			String webcamsOfUser = null;
+			
+			if(rs2.next())
+			{
+				webcamsOfUser = rs2.getString("webcams");
+			}
+			
+			webcamsOfUser = webcamsOfUser + webcam_id + " ";
+			
+			PreparedStatement pstmt2 = connection.prepareStatement("insert into benutzer (webcams) values (?) where benutzername = ?");
+			pstmt2.setString(1, webcamsOfUser);
+			pstmt2.setString(2, user_id);
+			pstmt2.executeUpdate();
+			
 		} catch (Exception e) {
 			throw new WebcamNotSavedException();
 		} finally {
