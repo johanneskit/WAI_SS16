@@ -27,7 +27,14 @@ public class WebcamEdit extends HttpServlet {
 	final WebcamDao webcamDao = DaoFactory.getInstance().getWebcamDao();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
+		HttpSession session = request.getSession(false);
+		int prio = (int) session.getAttribute("priority");
+		if(session == null || prio != 0)
+		{
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
+
 		String action = request.getParameter("action");
 		
 		if (action == null) {
@@ -69,7 +76,14 @@ public class WebcamEdit extends HttpServlet {
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
-				
+		HttpSession session = request.getSession(false);
+		int prio = (int) session.getAttribute("priority");
+		if(session == null || prio != 0)
+		{
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);//403
+			return;
+		}
+		
 		Integer id = null;
 		
 		if(request.getParameter("id") != null) {
@@ -79,15 +93,6 @@ public class WebcamEdit extends HttpServlet {
 		
 		String name = request.getParameter("name");
 		String url = request.getParameter("url");	
-		
-		HttpSession session = null;
-		session = request.getSession(false);
-		
-		if(session == null)
-		{
-			//error: 403
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-		}
 		
 		String user_id = session.getAttribute("user_id").toString();
 		
