@@ -69,22 +69,26 @@ public class getMaskBean {
 	}
 	
 	public void processRequest(HttpServletRequest request) {
-		cam = request.getParameter("cam");
-		year = request.getParameter("year");
-		month = request.getParameter("month");
-		day = request.getParameter("day");
-		hour = request.getParameter("hour");
-		
-		if(cam != null)
-			setYears();
-		if(year != null)
-			setMonths();
-		if(month != null)
-			setDays();
-		if(day != null)
-			setHours();
-		if(hour != null)
-			setMinutes();
+		if (request.getParameter("reset") == null) {
+			cam = request.getParameter("cam");
+			year = request.getParameter("year");
+			month = request.getParameter("month");
+			day = request.getParameter("day");
+			hour = request.getParameter("hour");
+			
+			if(cam != null && cam != "")
+				setYears();
+			if(year != null && year != "")
+				setMonths();
+			if(month != null && month != "")
+				setDays();
+			if(day != null && day != "")
+				setHours();
+			if(hour != null && hour != "")
+				setMinutes();
+		} else {
+			cam = year = month = day = hour = minute = null;
+		}
 	}
 	
 	//Camera
