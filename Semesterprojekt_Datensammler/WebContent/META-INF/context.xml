@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
 	<Environment name="projectPath"
-		value="/home/kautschuk/Documents/HS Mannheim/WAI/WAI_SS16/Drafts/Datensammler/WebContent"
+		value="/home/kautschuk/Documents/HS Mannheim/WAI/WAI_SS16/Semesterprojekt_Datensammler/WebContent"
 		type="java.lang.String" override="false" />
 	<Environment name="configPath" value="/WEB-INF/config"
 		type="java.lang.String" override="false" />
