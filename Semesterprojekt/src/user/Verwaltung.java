@@ -1,13 +1,16 @@
 package user;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.naming.NamingException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import utils.JNDIFactory;
@@ -26,6 +29,27 @@ public class Verwaltung extends HttpServlet {
 	ResultSet rs = null;
 	
 	JNDIFactory jndiFactory = JNDIFactory.getInstance();
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if(req.getParameter("logout") == null)
+		{
+			return;
+		}
+		else
+		{
+			HttpSession session = req.getSession(false);
+			if(session == null)
+			{
+				return;
+			}
+			session.invalidate();
+			resp.getWriter().println("Sie haben sich erfolgreich abgemeldet");
+			resp.getWriter().println("<a href=");
+			resp.getWriter().println("/Semesterprojekt_Webcams/login.html>");
+			resp.getWriter().println("zum Login</a>");
+		}
+	}
 	
 	public void getContextValues(HttpServletRequest request) throws SQLException, NamingException {
 		

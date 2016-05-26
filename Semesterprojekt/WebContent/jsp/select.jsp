@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page language="java" import="site.*"%>
-<jsp:useBean id="getMask" scope="session" class="site.getMaskBean" />
+<%@ page language="java" import="auslieferung.*"%>
+<jsp:useBean id="getMask" scope="session" class="auslieferung.getMaskBean" />
 
 <!DOCTYPE html>
 <html>

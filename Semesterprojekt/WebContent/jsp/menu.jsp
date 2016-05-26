@@ -26,6 +26,7 @@
 		<a href="/Semesterprojekt_Webcams/listCam">Kamera anlegen</a>
 		<a href="/Semesterprojekt_Webcams/jsp/select.jsp">Bilder anzeigen</a>
 		<a href="/Semesterprojekt_Webcams/testform.html">Bilder anzeigen (test)</a>
+		<a href="/Semesterprojekt_Webcams/verwaltung?logout">Abmelden(test)</a>
 		<hr>
 
 	</CENTER>
