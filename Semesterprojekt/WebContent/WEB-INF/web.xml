@@ -37,6 +37,17 @@
     	<servlet-name>BenutzerEdit</servlet-name>
     	<servlet-class>servlets.BenutzerEdit</servlet-class>
   	</servlet>
+
+  	<servlet>
+    	<servlet-name>Verwaltung</servlet-name>
+    	<servlet-class>user.Verwaltung</servlet-class>
+  	</servlet>
+   	
+   	<servlet-mapping>
+    	<servlet-name>Verwaltung</servlet-name>
+    	<url-pattern>/verwaltung</url-pattern>
+  	</servlet-mapping>
+   	
   	
  	<servlet-mapping>
     	<servlet-name>BenutzerList</servlet-name>
@@ -72,7 +83,7 @@
 	    <servlet-name>ImageServlet</servlet-name>
 	    <url-pattern>/imageServlet</url-pattern>
   	</servlet-mapping>
-
+  	
 	<listener>
 		<listener-class>utils.SystemStartup</listener-class>
 	</listener>
