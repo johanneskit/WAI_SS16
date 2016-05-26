@@ -20,8 +20,8 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import model.WebCam;
 import utils.JNDIFactory;
-import utils.WebCam;
 
 public class GetCameraImage implements Job {
 	private static Logger jlog = Logger.getLogger(GetCameraImage.class);
