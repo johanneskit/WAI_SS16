@@ -75,7 +75,7 @@ public class ImageServlet extends HttpServlet {
 			}
 			
 			//cam_id aus images DB holen
-			p_statement = connection.prepareStatement("SELECT cam_id FROM imgages WHERE id = ?");
+			p_statement = connection.prepareStatement("SELECT cam_id FROM images WHERE id = ?");
 			p_statement.setInt(1, Integer.parseInt(imageID));
 			
 			try (ResultSet resultSet = p_statement.executeQuery()) {
