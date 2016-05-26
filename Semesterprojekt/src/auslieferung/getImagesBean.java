@@ -1,11 +1,13 @@
 package auslieferung;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.naming.NamingException;
+import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
 import org.apache.log4j.Logger;
@@ -50,11 +52,22 @@ public class getImagesBean {
 
 	public void processRequest(HttpServletRequest request) {
 
+		HttpSession session = null;
+		session = request.getSession(false);
+		
+		if (session.getAttribute("user") == null) {
+			//keine bilderliste an unangemeldte ausliefern!
+			return;
+		}
+		
 		try {
+			
 			connection = jndiFactory.getConnection("jdbc/waiDB");
 			statement = connection.createStatement();
 
 			String cam, year, month, day, hour, minute = null;
+			String user;
+			String webcams = "", cam_id = "-1"; 
 			
 			String query = null, selectString = null;
 	
@@ -88,6 +101,82 @@ public class getImagesBean {
 			else
 				selectString = selectString + "' AND minute='" + minute + "';";
 	
+			//Rechteprüfung:
+			
+			//Benutzer ID aus Context holen
+			user = session.getAttribute("user").toString();
+			
+			//liste "webcams" der cam_id's aus benutzer DB holen
+
+			PreparedStatement p_statement;
+			p_statement = connection.prepareStatement("SELECT webcams FROM benutzer WHERE benutzername = ?");
+			p_statement.setString(1, user);
+			
+			try (ResultSet resultSet = p_statement.executeQuery()) {
+				if (resultSet.next()) {
+					webcams = resultSet.getString("webcams");
+					
+					if (webcams == null) {
+						try {
+							if (connection != null)
+								connection.close();
+							if (p_statement != null)
+								p_statement.close();
+							if (resultSet != null)
+								resultSet.close();
+
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						return;
+					}
+				}
+			} catch (SQLException e) {
+				//TODO
+			}
+			
+			//cam_id aus images DB holen
+			query = "SELECT cam_id FROM images WHERE " + selectString;
+			
+			resultSet = statement.executeQuery(query);
+			
+			if (resultSet.next()) {
+				cam_id = String.valueOf(resultSet.getInt("cam_id"));
+
+			}
+			
+			//cam_id in Liste webcams suchen
+			String[] parts = webcams.split(" ");
+			for(int i = 0; i < parts.length; i++) {
+			    if(parts[i].equals(cam_id))
+			    	break;
+			    
+			    if(i == parts.length - 1)
+			    {
+					//kein bild an unauthorisierte ausliefern!
+					
+					try {
+						if (connection != null)
+							connection.close();
+						if (p_statement != null)
+							p_statement.close();
+						if (resultSet != null)
+							resultSet.close();
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					numImages = 0;
+					return;
+			    }
+			}
+			
+			// ENDE Rechteprüfung
+			
 			// Anzahl Bilder die anzuzeigen sind ermitteln
 			query = "SELECT COUNT(*) FROM images WHERE " + selectString;
 	

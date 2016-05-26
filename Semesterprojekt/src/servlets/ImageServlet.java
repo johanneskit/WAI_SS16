@@ -30,7 +30,7 @@ public class ImageServlet extends HttpServlet {
 		HttpSession session = null;
 		session = request.getSession(false);
 		
-		if (session == null) {
+		if (session.getAttribute("user") == null) {
 			//kein bild an unangemeldte ausliefern!
 			response.sendError(HttpServletResponse.SC_FORBIDDEN); // 403
 			return;
@@ -48,7 +48,7 @@ public class ImageServlet extends HttpServlet {
 			return;
 		}
 		
-		String webcams = "", cam_id = "-1"; 
+		String webcams = "", cam_id = "-1";
 
 		jlog.info("Bild mit ID " + imageID + " angefordert");
 		if (thumb)
@@ -111,7 +111,11 @@ public class ImageServlet extends HttpServlet {
 			//cam_id in Liste webcams suchen
 			String[] parts = webcams.split(" ");
 			for(int i = 0; i < parts.length; i++) {
-			    if(!parts[i].equals(cam_id)) {
+			    if(parts[i].equals(cam_id))
+			    	break;
+			    
+			    if(i == parts.length - 1)
+			    {
 					//kein bild an unauthorisierte ausliefern!
 					response.sendError(HttpServletResponse.SC_FORBIDDEN); // 403
 					

@@ -7,7 +7,7 @@
     <title>Bibliothek</title>
   </head>  
   <body>
-	<form name="edit" action="edit" method="post">		
+	<form name="edit" action="editBenutzer" method="post">		
 		<table border="1">
 			<tbody>
 				<tr>

@@ -47,6 +47,7 @@ public class LoginBean {
 				connection = jndiFactory.getConnection("jdbc/waiDB");
 				stmt = connection.createStatement();
 	
+				//TODO: prüfen ob session besteht
 				String temp_name = request.getParameter("name");
 				String temp_pw = request.getParameter("pw");
 				

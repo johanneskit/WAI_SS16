@@ -1,12 +1,17 @@
 package auslieferung;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.naming.NamingException;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -17,6 +22,12 @@ public class getMaskBean {
 	Connection connection = null;
 	Statement statement = null;
 	ResultSet resultSet = null;
+	
+	HttpSession session = null;
+	
+	String webcams = "", cam_id = "-1";
+	String user;
+	int prio;
 
 	JNDIFactory jndiFactory = JNDIFactory.getInstance();
 	private static Logger jlog = Logger.getLogger(getImagesBean.class);
@@ -30,19 +41,11 @@ public class getMaskBean {
 	}
 	
 	public void initDB() throws NamingException, SQLException {
-		connection = jndiFactory.getConnection("jdbc/waiDB");
-		statement = connection.createStatement();
-	}
-	
-	public void init() {
-		try {
-			initDB();
-		} catch (NamingException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		if(connection == null)
+			connection = jndiFactory.getConnection("jdbc/waiDB");
 		
-		setCams();
+		if (statement == null)
+			statement = connection.createStatement();
 	}
 
 	public void closeDB() {
@@ -68,7 +71,23 @@ public class getMaskBean {
 			}
 	}
 	
-	public void processRequest(HttpServletRequest request) {
+	public boolean processRequest(HttpServletRequest request) throws NamingException, SQLException {
+		session = request.getSession(false);
+		
+		if (session.getAttribute("user") == null) {
+			//keine ausführung für unangemeldte!
+			return false;
+		}
+		
+		initDB();
+		
+		if(cam == null) {
+			user = session.getAttribute("user").toString();
+			prio = (int) session.getAttribute("priority");
+			
+			setCams();
+		}
+		
 		if (request.getParameter("reset") == null) {
 			cam = request.getParameter("cam");
 			year = request.getParameter("year");
@@ -87,13 +106,18 @@ public class getMaskBean {
 			if(hour != null && hour != "")
 				setMinutes();
 			
+			closeDB();
+			
 		} else {
 			cam = year = month = day = hour = minute = null;
 			cams = years = months = days = hours = minutes = null;
 			numCams = numYears = numMonths = numDays = numHours = numMinutes = 0;
 			
 			setCams();
+			closeDB();
 		}
+		
+		return true;
 	}
 	
 	//Camera
@@ -108,31 +132,73 @@ public class getMaskBean {
 			return "";
 	}
 	
-	public void setCams() {
-
-		try {
-			// Count webcams
-			String query = "SELECT COUNT(DISTINCT cam_name) FROM images;";
-			resultSet = statement.executeQuery(query);
+	private void setCams() {
+		
+		if (prio == 0)
+		{
+			try {
+				// Count webcams for admin
+				String query = "SELECT COUNT(DISTINCT cam_name) FROM images;";
+				resultSet = statement.executeQuery(query);
+				
+				while (resultSet.next()) {
+					numCams = resultSet.getInt("COUNT");
+				}
+				
+				cams = new String[numCams];
+				
+				query = "SELECT DISTINCT cam_name FROM images;";
+				resultSet = statement.executeQuery(query);
+				
+				int i=0;
+				while (resultSet.next()) {
+					cams[i] = resultSet.getString("cam_name");
+					i++;
+				}
 			
-			while (resultSet.next()) {
-				numCams = resultSet.getInt("COUNT");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
-			cams = new String[numCams];
+		} else {
 			
-			query = "SELECT DISTINCT cam_name FROM images;";
-			resultSet = statement.executeQuery(query);
-			
-			int i=0;
-			while (resultSet.next()) {
-				cams[i] = resultSet.getString("cam_name");
-				i++;
+			try {
+				// Count webcams for user
+				String query = "SELECT webcams FROM benutzer WHERE benutzername ='" + user + "';";
+				resultSet = statement.executeQuery(query);
+				
+				if(resultSet.next()) {
+					webcams = resultSet.getString("webcams");
+				}
+				
+				String[] parts = null;
+				
+				if (webcams != null)
+				{
+					parts = webcams.split(" ");
+					numCams = parts.length;
+				} else {
+					numCams = 0;
+					return;
+				}
+				
+				cams = new String[numCams];
+				
+				//wie heißen die webcams des users
+				for(int i=0; i<numCams; i++)
+				{
+					query = "SELECT name FROM webcams where id = '" + parts[i] + "';";
+					resultSet = statement.executeQuery(query);
+				
+					if(resultSet.next())
+						cams[i] = resultSet.getString("name");
+				}
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
@@ -156,7 +222,7 @@ public class getMaskBean {
 		return years[i];
 	}
 	
-	public void setYears() {
+	private void setYears() {
 
 		try {
 			// Count years
@@ -200,7 +266,7 @@ public class getMaskBean {
 		return months[i];
 	}
 	
-	public void setMonths() {
+	private void setMonths() {
 		try {
 			// Count months
 			String query = "SELECT COUNT(DISTINCT month) FROM images WHERE cam_name='" + cam + "' AND year='" + year + "';";
@@ -243,7 +309,7 @@ public class getMaskBean {
 		return days[i];
 	}
 	
-	public void setDays() {
+	private void setDays() {
 		try {
 			// Count days
 			String query = "SELECT COUNT(DISTINCT day) FROM images WHERE cam_name='" + cam + "' AND year='" + year + "' AND month='" + month + "';";
@@ -286,7 +352,7 @@ public class getMaskBean {
 		return hours[i];
 	}
 	
-	public void setHours() {
+	private void setHours() {
 		try {
 			// Count hours
 			String query = "SELECT COUNT(DISTINCT hour) FROM images WHERE cam_name='" + cam + "' AND year='" + year + "' AND month='" + month + "' AND day='" + day + "';";
@@ -325,7 +391,7 @@ public class getMaskBean {
 		return minutes[i];
 	}
 	
-	public void setMinutes() {
+	private void setMinutes() {
 		try {
 			
 			// If hours is wildcarded, minutes can only be wildcarded too

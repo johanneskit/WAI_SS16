@@ -15,14 +15,12 @@ import javax.servlet.http.HttpSession;
 
 import utils.JNDIFactory;
 
-class Priority extends Object{
-	int priority = 0;
-}
-
 
 public class Verwaltung extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public boolean isAdmin = false;
+	
+	int priority = 99;
 	
 	Connection connection = null;
 	Statement stmt = null;
@@ -60,30 +58,30 @@ public class Verwaltung extends HttpServlet {
 
 		rs.next();
 
-		HttpSession session = request.getSession(true);
+		//wenn bereits eingeloggt: umloggen
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
+		
+		//neue session aufbauen
+		session = request.getSession(true);
 		
 		if(session.isNew())
 		{
 			session.setMaxInactiveInterval(3600000);
 		}
 		
-		Priority userPriority = (Priority)session.getAttribute("priority");
-		
-		if(userPriority == null)
-		{
-			userPriority = new Priority();
-			userPriority.priority = rs.getInt("prioritaet");
-		}
-		
-		
-		session.setAttribute("priority", userPriority);
+		priority = rs.getInt("prioritaet");
+				
+		session.setAttribute("priority", priority);
 		session.setAttribute("user", request.getParameter("name"));
 		
 		connection.close();
 		stmt.close();
 		rs.close();
 		
-		if(userPriority.priority != 0){
+		if(priority != 0){
 			isAdmin = false;
 			return;
 		}

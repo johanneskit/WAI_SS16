@@ -13,7 +13,12 @@
 
 	<%getImages.processRequest(request);%>
 	
-	<p><%out.print(getImages.getNumImages());%> Bilder angefordert.
+	<p>
+	<% if (getImages.getNumImages() == 0) {%>
+	Keine Bilder zu dieser Anfrage vorhanden oder keine Rechte!
+	<a href="/Semesterprojekt_Webcams/jsp/select.jsp">zurück und neue Anfrage stellen</a>
+	<% } else {
+	out.print(getImages.getNumImages());%> Bilder zu dieser Anfrage vorhanden.
 
 	<p>
 	<center>
@@ -43,6 +48,8 @@
 			%>
 		</TABLE>
 	</center>
+	
+	<% }//if %>
 
 </body>
 </html>
