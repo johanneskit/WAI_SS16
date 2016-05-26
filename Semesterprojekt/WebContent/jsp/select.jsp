@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page language="java" import="site.*"%>
-<jsp:useBean id="getMask" scope="session" class="site.getMaskBean" />
+<%@ page language="java" import="auslieferung.*"%>
+<jsp:useBean id="getMask" scope="session" class="auslieferung.getMaskBean" />
 
 <!DOCTYPE html>
 <html>
@@ -45,6 +45,7 @@
 			<option <% if (getMask.getSelectedHour().equals(getMask.getHour(i))) { %>selected<% }//if %> value="<%out.print(getMask.getHour(i));%>"><%out.print(getMask.getHour(i));%></option>
 			<% } //for %>
 		</select><br>
+		<% if (!getMask.getSelectedHour().equals("")) {%> Minute: <% }//if %>
 		<select name="minute" <% if (getMask.getSelectedHour().equals("")) {%> hidden=true <% }//if %>>
 			<% for (int i=0; i < getMask.getNumMinutes(); i++) { %>
 			<option value="<%out.print(getMask.getMinute(i));%>"><%out.print(getMask.getMinute(i));%></option>

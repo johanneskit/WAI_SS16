@@ -1,4 +1,4 @@
-package site;
+package auslieferung;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -88,6 +88,10 @@ public class getMaskBean {
 				setMinutes();
 		} else {
 			cam = year = month = day = hour = minute = null;
+			cams = years = months = days = hours = minutes = null;
+			numCams = numYears = numMonths = numDays = numHours = numMinutes = 0;
+			
+			setCams();
 		}
 	}
 	
