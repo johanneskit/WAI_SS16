@@ -53,7 +53,7 @@ public class Verwaltung extends HttpServlet {
 		
 		
 		session.setAttribute("priority", userPriority);
-		session.setAttribute("user_id", request.getParameter("name"));
+		session.setAttribute("user", request.getParameter("name"));
 		
 		connection.close();
 		stmt.close();

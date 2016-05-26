@@ -60,11 +60,14 @@
 		
 		<!-- "Autoclick" nach jedem Ändern des Formulars irgendwie hinbasteln -->
 		<% if (getMask.getSelectedHour().equals("")) { %>
-		<input type="submit" value="Einloggen">
+		<input type="submit" value="Festlegen">
 		<% } else { %>
 		<input type="submit" value="Absenden">
 		<% } //if %>
-		<input type="submit" value="Reset" name="reset">
+	</form>
+	
+	<form method=POST action="select.jsp?reset">
+		<input type="submit" value="Reset">
 	</form>
 	
 	<!-- DB Connection schließen! -->

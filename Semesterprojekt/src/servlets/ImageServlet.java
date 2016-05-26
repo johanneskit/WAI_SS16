@@ -12,9 +12,6 @@ import org.apache.log4j.Logger;
 
 import utils.JNDIFactory;
 
-//TODO
-//Fallunterscheidung ob thumbs oder vollbild ausgeliefert werden soll
-//Rechte prüfen
 
 @SuppressWarnings("serial")
 public class ImageServlet extends HttpServlet {
@@ -45,6 +42,12 @@ public class ImageServlet extends HttpServlet {
 			thumb = true;
 
 		String imageID = request.getParameter("id");
+		if (imageID == null || imageID.equals(""))
+		{
+			response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404
+			return;
+		}
+		
 		String webcams = "", cam_id = "-1"; 
 
 		jlog.info("Bild mit ID " + imageID + " angefordert");
@@ -58,17 +61,33 @@ public class ImageServlet extends HttpServlet {
 			//Rechteprüfung:
 			
 			//Benutzer ID aus Context holen
-			String user_id = session.getAttribute("user_id").toString();
+			String user = session.getAttribute("user").toString();
 			
 			//liste "webcams" der cam_id's aus benutzer DB holen
 
 			p_statement = connection.prepareStatement("SELECT webcams FROM benutzer WHERE benutzername = ?");
-			p_statement.setString(1, user_id);
+			p_statement.setString(1, user);
 			
 			try (ResultSet resultSet = p_statement.executeQuery()) {
 				if (resultSet.next()) {
 					webcams = resultSet.getString("webcams");
+					
+					if (webcams == null) {
+						try {
+							if (connection != null)
+								connection.close();
+							if (p_statement != null)
+								p_statement.close();
+							if (resultSet != null)
+								resultSet.close();
 
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						return;
+					}
 				}
 			} catch (SQLException e) {
 				throw new ServletException("Something failed at SQL/DB level.", e);
@@ -96,7 +115,6 @@ public class ImageServlet extends HttpServlet {
 					//kein bild an unauthorisierte ausliefern!
 					response.sendError(HttpServletResponse.SC_FORBIDDEN); // 403
 					
-					//alles schließen und beenden
 					try {
 						if (connection != null)
 							connection.close();

@@ -86,6 +86,7 @@ public class getMaskBean {
 				setHours();
 			if(hour != null && hour != "")
 				setMinutes();
+			
 		} else {
 			cam = year = month = day = hour = minute = null;
 			cams = years = months = days = hours = minutes = null;
@@ -358,6 +359,8 @@ public class getMaskBean {
 			}
 			
 			minutes[i] = "*";
+			
+			closeDB();
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
