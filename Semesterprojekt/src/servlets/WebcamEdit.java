@@ -29,7 +29,7 @@ public class WebcamEdit extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		int prio = (int) session.getAttribute("priority");
-		if(session == null || prio != 0)
+		if(prio != 0)
 		{
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
@@ -78,7 +78,7 @@ public class WebcamEdit extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		HttpSession session = request.getSession(false);
 		int prio = (int) session.getAttribute("priority");
-		if(session == null || prio != 0)
+		if(prio != 0)
 		{
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);//403
 			return;
@@ -94,7 +94,7 @@ public class WebcamEdit extends HttpServlet {
 		String name = request.getParameter("name");
 		String url = request.getParameter("url");	
 		
-		String user_id = session.getAttribute("user_id").toString();
+		String user_id = session.getAttribute("user").toString();
 		
 		
 		Webcam webcam = new Webcam();		

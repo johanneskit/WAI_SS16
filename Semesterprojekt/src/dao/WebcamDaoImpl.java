@@ -106,9 +106,9 @@ public class WebcamDaoImpl implements WebcamDao {
 				webcamsOfUser = rs2.getString("webcams");
 			}
 			
-			webcamsOfUser = webcamsOfUser + webcam_id + " ";
+			webcamsOfUser = webcamsOfUser + " " + webcam_id + " ";
 			
-			PreparedStatement pstmt2 = connection.prepareStatement("insert into benutzer (webcams) values (?) where benutzername = ?");
+			PreparedStatement pstmt2 = connection.prepareStatement("UPDATE benutzer SET webcams = ? WHERE benutzername = ?");
 			pstmt2.setString(1, webcamsOfUser);
 			pstmt2.setString(2, user_id);
 			pstmt2.executeUpdate();

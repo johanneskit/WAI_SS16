@@ -24,7 +24,7 @@ public class BenutzerList extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		int prio = (int) session.getAttribute("priority");
-		if(session == null || prio != 0)
+		if(prio != 0)
 		{
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;

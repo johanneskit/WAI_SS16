@@ -23,10 +23,10 @@
 	
 		<br>
 		<a href="/Semesterprojekt_Webcams/listBenutzer">Benutzerverwaltung</a>
-		<a href="/Semesterprojekt_Webcams/listCam">Kamera anlegen</a>
+		<a href="/Semesterprojekt_Webcams/listCam">Kamera anzeigen</a>
 		<a href="/Semesterprojekt_Webcams/jsp/select.jsp">Bilder anzeigen</a>
-		<a href="/Semesterprojekt_Webcams/testform.html">Bilder anzeigen (test)</a>
-		<a href="/Semesterprojekt_Webcams/verwaltung?logout">Abmelden(test)</a>
+		<a href="/Semesterprojekt_Webcams/testform.html">Bilder anzeigen</a>
+		<a href="/Semesterprojekt_Webcams/verwaltung?logout">Abmelden</a>
 		<hr>
 
 	</CENTER>
@@ -41,7 +41,7 @@
 		<br>
 		<a href="/Semesterprojekt_Webcams/listCam">Kamera anlegen</a>
 		<a href="/Semesterprojekt_Webcams/jsp/select.jsp">Bilder anzeigen</a>
-		<a href="/Semesterprojekt_Webcams/verwaltung?logout">Abmelden(test)</a>
+		<a href="/Semesterprojekt_Webcams/verwaltung?logout">Abmelden</a>
 		<hr>
 
 	</CENTER>

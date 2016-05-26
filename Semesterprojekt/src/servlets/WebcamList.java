@@ -15,21 +15,22 @@ import model.Webcam;
 import dao.WebcamDao;
 import dao.DaoFactory;
 
-public class WebcamList extends HttpServlet {	
-	
+public class WebcamList extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	final WebcamDao webcamDao = DaoFactory.getInstance().getWebcamDao();
-	
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
 		HttpSession session = null;
 		session = request.getSession(false);
-		
-		if (session == null) {
-			//kein bild an unangemeldte ausliefern!
-			response.sendError(HttpServletResponse.SC_FORBIDDEN); // 403
-			return;
-		}
+		String user;
+		user = (String) session.getAttribute("user");
+		if (user == null) {
+				//kein bild an unangemeldte ausliefern!
+				response.sendError(HttpServletResponse.SC_FORBIDDEN); // 403
+				return;
+			}
 
 		List<Webcam> collection = webcamDao.list();
 		request.setAttribute("webcam", collection);
