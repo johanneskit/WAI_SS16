@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Webcam;
 
@@ -21,6 +22,15 @@ public class WebcamList extends HttpServlet {
 	final WebcamDao webcamDao = DaoFactory.getInstance().getWebcamDao();
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
+		HttpSession session = null;
+		session = request.getSession(false);
+		
+		if (session == null) {
+			//kein bild an unangemeldte ausliefern!
+			response.sendError(HttpServletResponse.SC_FORBIDDEN); // 403
+			return;
+		}
+
 		List<Webcam> collection = webcamDao.list();
 		request.setAttribute("webcam", collection);
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/jsp/listCam.jsp");
